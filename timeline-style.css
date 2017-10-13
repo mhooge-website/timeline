@@ -1,0 +1,30 @@
+header {
+	font-size: 150%;
+	text-align: center;
+}
+#canvas {
+	border-style: ridge;
+	border-color: #000000;
+	
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+.modal {
+	display: none;
+	position: absolute;
+	top: 50%;
+	transform: translate(140%, -55%);
+	width: 250px;
+	height: 200px;
+	z-index: 1;
+}
+.modal-content {
+	width: 80%;
+	float: right;
+	border: ridge;
+}
+.modal-buttons {
+	float: right;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/global-style.css">
+<script src="/scripts/TimelineJS/TestStuff.js"></script>
+<script> 
+function closeModal() {
+	document.getElementById("dateModal").style.display = "none";
+};
+</script>
+<script src="/scripts/generate_nav.js"></script>
+</head>
+<body onload="generate_nav(null); initialize();">
+	<link rel="stylesheet" type="text/css" href="/projects/timeline/timeline-style.css">
+	
+	<header><h1>Interactive Timeline</h1></header>
+	
+	<canvas id="canvas" width="1100" height="600"></canvas>
+	<div id="dateModal" class="modal">
+		<div class="modal-content">
+			<button class="modal-buttons" onclick="closeModal();">&times;</button>
+			<form>
+				Input a Date:
+				<input type="date" name="date" id="dateForm">
+			</form>
+			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
+		</div>
+	</div>
+	
+</body>
+</html>
