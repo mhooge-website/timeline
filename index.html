@@ -2,7 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="/global-style.css">
-<script src="/scripts/TimelineJS/TestStuff.js"></script>
+<script src="/scripts/timeline.js"></script>
 <script> 
 function closeModal() {
 	document.getElementById("dateModal").style.display = "none";
@@ -10,12 +10,15 @@ function closeModal() {
 </script>
 <script src="/scripts/generate_nav.js"></script>
 </head>
-<body onload="generate_nav(null); initialize();">
+<body onload="generate_nav('Interactive Timeline'); initialize();">
 	<link rel="stylesheet" type="text/css" href="/projects/timeline/timeline-style.css">
-	
-	<header><h1>Interactive Timeline</h1></header>
-	
-	<canvas id="canvas" width="1100" height="600"></canvas>
+	<link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css"/>
+	<script src="/bootstrap/js/jquery.min.js"></script>
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+	<div id="canvas_div">
+		<canvas id="canvas" width="1100" height="600"></canvas>
+	</div>
 	<div id="dateModal" class="modal">
 		<div class="modal-content">
 			<button class="modal-buttons" onclick="closeModal();">&times;</button>
