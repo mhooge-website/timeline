@@ -7,6 +7,10 @@
 function closeModal() {
 	document.getElementById("dateModal").style.display = "none";
 };
+function copyURL() {
+	document.getElementById("ref-link").select();
+	document.execCommand('copy');
+};
 </script>
 <script src="/scripts/generate_nav.js"></script>
 </head>
@@ -17,8 +21,20 @@ function closeModal() {
 	<script src="/bootstrap/js/bootstrap.min.js"></script>
 
 	<div id="canvas_div">
+		<div id="option-bar">
+			<button onclick="resetTimeline();" id="reset-button" class="btn btn-primary">Reset</button>
+			<button onclick="saveTimeline();" id="save-button" class="btn btn-primary">Save Timeline</button>
+		</div>
 		<canvas id="canvas" width="1100" height="600"></canvas>
 	</div>
+
+	<div id="save-modal">
+		<button class="btn btn-primary" onclick="closeSaveModal();">&times;</button>
+		<p>Timeline saved! Access it later using the link below.</p>
+		<a id="ref-link"></a>
+		<button class="btn btn-primary" onclick="copyURL();">Copy</button>
+	</div>
+
 	<div id="dateModal" class="modal">
 		<div class="modal-content">
 			<button class="modal-buttons" onclick="closeModal();">&times;</button>
@@ -29,6 +45,5 @@ function closeModal() {
 			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
 		</div>
 	</div>
-	
 </body>
 </html>

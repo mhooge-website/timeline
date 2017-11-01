@@ -1,16 +1,44 @@
-#canvas {
-	border-style: ridge;
-	border-color: #000000;
-	
+#canvas {	
 	position: relative;
 	left: 50%;
 	transform: translate(-50%, 0%);
+}
+
+#canvas_div {
+	width: 1110px;
+	padding: 5px;
+	margin: auto;
+	margin-bottom: 10px;
+	border-style: ridge;
+	border-color: #000000;
+}
+
+#option-bar {
+	position: relative;
+	float: right;
+}
+
+#save-modal {
+	position: absolute;
+	width: 200px;
+	display: none;
+	margin: auto;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .input-div {
 	position: absolute;
 	margin: auto;
 	width: 300px;
+}
+
+#setup-div {
+	margin: auto;
+	width: 500px;
+	height: 600px;
+	display: none;
 }
 
 .modal {
