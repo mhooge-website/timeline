@@ -8,29 +8,41 @@ function closeModal() {
 	document.getElementById("dateModal").style.display = "none";
 };
 function copyURL() {
-	document.getElementById("ref-link").select();
-	document.execCommand('copy');
+	
 };
 </script>
 <script src="/scripts/generate_nav.js"></script>
 </head>
-<body onload="generate_nav('Interactive Timeline'); initialize();">
+<body onload="generate_nav('Interactive Timeline');">
 	<link rel="stylesheet" type="text/css" href="/projects/timeline/timeline-style.css">
 	<link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css"/>
 	<script src="/bootstrap/js/jquery.min.js"></script>
 	<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+	<div id="startup-div">
+		<form method="post">
+			<div class="form-group">
+				<label for="input-id">Load Timeline from ID</label>
+				<input class="form-control" id="input" name="input-id" type="text" placeholder="Timeline ID"></input>
+			</div>
+		</form>
+		<button id="load-timeline-button" class="btn btn-primary" onclick="loadTimeline();">Load</button>
+		<p>Or...</p>
+		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize();">New Timeline</button>
+	</div>
 
 	<div id="canvas_div">
 		<div id="option-bar">
 			<button onclick="resetTimeline();" id="reset-button" class="btn btn-primary">Reset</button>
 			<button onclick="saveTimeline();" id="save-button" class="btn btn-primary">Save Timeline</button>
 		</div>
+
 		<canvas id="canvas" width="1100" height="600"></canvas>
 	</div>
 
 	<div id="save-modal">
-		<button class="btn btn-primary" onclick="closeSaveModal();">&times;</button>
-		<p>Timeline saved! Access it later using the link below.</p>
+		<button class="btn btn-primary" style="float: right" onclick="closeSaveModal();">&times;</button>
+		<p>Timeline saved! Access it later using the code below.</p>
 		<a id="ref-link"></a>
 		<button class="btn btn-primary" onclick="copyURL();">Copy</button>
 	</div>
