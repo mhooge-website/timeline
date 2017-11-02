@@ -23,12 +23,13 @@ function copyURL() {
 		<form method="post">
 			<div class="form-group">
 				<label for="input-id">Load Timeline from ID</label>
-				<input class="form-control" id="input" name="input-id" type="text" placeholder="Timeline ID"></input>
+				<input class="form-control" id="input-id" name="input-id" type="text" placeholder="Timeline ID"></input>
+				<label id="input-err-label" for="input-id"></label>
 			</div>
 		</form>
 		<button id="load-timeline-button" class="btn btn-primary" onclick="loadTimeline();">Load</button>
 		<p>Or...</p>
-		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize();">New Timeline</button>
+		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline();">New Timeline</button>
 	</div>
 
 	<div id="canvas_div">
