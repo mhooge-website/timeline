@@ -9,7 +9,7 @@ if (!($stmt = $conn->prepare("SELECT start_date, end_date, name FROM timelines W
     echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
 }
 
-if (!$stmt->bind_param("i", $id)) {
+if (!$stmt->bind_param("s", $id)) {
     echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
 }
 
@@ -21,6 +21,11 @@ if(!($res = $stmt->get_result())) {
 
 }
 
-$val = $res->fetch_all();
-echo json_encode($val);
+if($res->num_rows == 0) {
+    echo "empty";
+}
+else {
+    $val = $res->fetch_all();
+    echo json_encode($val);
+}
 ?>

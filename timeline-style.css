@@ -46,6 +46,10 @@
 	background-color: #dadada;
 }
 
+#input-err-label {
+	color: red;
+}
+
 #text-area {
 	width: 100%;
 }
@@ -60,11 +64,10 @@
 .modal {
 	display: none;
 	position: absolute;
-	top: 50%;
-	transform: translate(140%, -55%);
+	margin: auto;
 	width: 250px;
 	height: 200px;
-	z-index: 1;
+	z-index: 2;
 }
 .modal-content {
 	width: 80%;
