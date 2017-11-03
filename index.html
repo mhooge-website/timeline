@@ -34,12 +34,26 @@ function copyURL() {
 
 	<div id="canvas_div">
 		<div id="option-bar">
-			<input id="timeline-name" type="text"></input>
-			<button onclick="resetTimeline();" id="reset-button" class="btn btn-primary">Reset</button>
-			<button onclick="saveTimeline();" id="save-button" class="btn btn-primary">Save Timeline</button>
+			<div id="option-bar-left">
+				<button id="settings-button" class="btn btn-primary">Settings</button>
+			</div>
+			<div id="option-bar-right">
+				<button onclick="resetTimeline();" id="reset-button" class="btn btn-primary">Reset</button>
+				<button onclick="saveTimeline();" id="save-button" class="btn btn-primary">Save Timeline</button>
+			</div>
+			<div id="option-bar-mid">
+				<input id="timeline-name" type="text"></input>
+			</div>
 		</div>
 
 		<canvas id="canvas" width="1100" height="600"></canvas>
+		<div id="helper-div">
+			<header>
+				<h2>Welcome! <br>
+					To get started, click on either ends of <br>
+					the timeline to select a start/end date.</h2>
+			</header>
+		</div>
 	</div>
 
 	<div id="save-modal">
@@ -58,14 +72,6 @@ function copyURL() {
 			</form>
 			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
 		</div>
-	</div>
-
-	<div id="helper-div">
-		<header>
-			<h2>Welcome! <br>
-				To get started, click on either ends of <br>
-				the timeline to select a start/end date.</h2>
-		</header>
 	</div>
 </body>
 </html>
