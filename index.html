@@ -29,11 +29,12 @@ function copyURL() {
 		</form>
 		<button id="load-timeline-button" class="btn btn-primary" onclick="loadTimeline();">Load</button>
 		<p>Or...</p>
-		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline();">New Timeline</button>
+		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline(); showHelperText();">New Timeline</button>
 	</div>
 
 	<div id="canvas_div">
 		<div id="option-bar">
+			<input id="timeline-name" type="text"></input>
 			<button onclick="resetTimeline();" id="reset-button" class="btn btn-primary">Reset</button>
 			<button onclick="saveTimeline();" id="save-button" class="btn btn-primary">Save Timeline</button>
 		</div>
@@ -57,6 +58,14 @@ function copyURL() {
 			</form>
 			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
 		</div>
+	</div>
+
+	<div id="helper-div">
+		<header>
+			<h2>Welcome! <br>
+				To get started, click on either ends of <br>
+				the timeline to select a start/end date.</h2>
+		</header>
 	</div>
 </body>
 </html>
