@@ -13,6 +13,7 @@
 	margin-bottom: 10px;
 	border-style: ridge;
 	border-color: #000000;
+	overflow: hidden;
 	display: none;
 }
 
@@ -40,36 +41,88 @@
 	font-size: 30px;
 }
 
+@keyframes popup-animation {
+	0% {
+		transform: translateY(150%);
+	}
+	100% {
+		transform: translateY(0%);
+	}
+}
+
+@keyframes popdown-animation {
+	0% {
+		transform: translateY(0%);
+	}
+	100% {
+		transform: translateY(150%);
+	}
+}
+
 #save-modal {
+	background-color: rgb(77, 78, 85);
+	padding: 10px;
+	border-color: black;
 	border-style: groove;
 	border-width: 1px;
 	position: absolute;
 	width: 200px;
-	display: none;
+}
+
+#save-modal > p {
+	color: white;
+}
+
+#ref-link {
+	background-color: rgb(77, 78, 85);
+	color: white;
+	border: none;
+}
+
+#close-save-modal {
+	float: right;
+}
+
+#btn-copy-id {
+	position: relative;
+	left: 50%;
+	transform: translate(-50%, 0%);
+}
+
+.popup-div {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: inline-block;
 	left: 0; right: 0;
-	margin: auto;
+	margin: 0 auto 0 auto;
+	bottom: 0;
+	z-index: 2;
+
+	animation-name: popup-animation;
+	animation-duration: 0.6s;
+	animation-direction: alternate;
+	animation-timing-function: linear;
+	animation-play-state: paused;
+	animation-fill-mode: forwards;
 }
 
 #helper-div {
-	display: none;
 	border-style: outset;
 	border-width: 2px;
-	border-color: rgb(31, 33, 196);
+	border-color: black;
+	background-color: #2571c7;
 	position: absolute;
-	max-width: 600px;
-	max-height: 130px;
-	margin: 0 auto 0 auto;
-	left: 0; right:0;
-	bottom: 0; top: 250;
-	z-index: 2;
+	max-width: 420px;
 }
 
 #helper-div > header {
 	text-align: center;
-	color: rgb(30, 173, 138);
+	font-size: 22px;
+	color: #ffffff;
 }
 
 .input-div {
+	display: inline-block;
 	position: absolute;
 	margin: auto;
 	width: 150px;
@@ -78,10 +131,31 @@
 #input-header {
 	border-style: groove;
 	border-width: 1px;
-	width: 150px;
+	width: inherit;
 	cursor: move;
 	display: inline-block;
 	background-color: #dadada;
+}
+
+#input-mid {
+	border-style: groove;
+	border-width: 1px;
+	width: inherit;
+	display: inline-block;
+}
+
+#input-footer {
+	background-color: white;
+	margin-top: -5px;
+	position: relative;
+	border-style: groove;
+	border-width: 1px;
+	width: inherit;
+	text-align: center;
+}
+
+#input-footer > button {
+	margin: auto;
 }
 
 #input-err-label {
@@ -89,14 +163,39 @@
 }
 
 #text-area {
+	display: block;
 	width: 100%;
 }
 
 #startup-div {
+	text-align: center;
 	margin: auto;
 	width: 500px;
 	height: 600px;
 	display: block;
+}
+
+#startup-header-label {
+	font-size: 18px;
+}
+
+#startup-input-div > label {
+	width: 100%;
+}
+
+#startup-div > p {
+	font-size: 18px;
+}
+
+#load-timeline-button {
+	margin-bottom: 3px;
+	margin-left: 5px;
+}
+
+#input-id {
+	display: inline-block;
+	width: 210px;
+	margin-right: 0px;
 }
 
 .modal {

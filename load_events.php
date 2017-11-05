@@ -6,7 +6,7 @@ $id = $_GET["id"];
 
 $conn = connect_db("mhso_grpro");
 
-if (!($stmt = $conn->prepare("SELECT description, deadline, completed, x_coord, y_coord FROM timeline_events WHERE timeline_id=?"))) {
+if (!($stmt = $conn->prepare("SELECT id, description, deadline, completed, x_coord, y_coord FROM timeline_events WHERE timeline_id=?"))) {
     echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
 }
 

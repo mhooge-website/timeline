@@ -8,7 +8,8 @@ function closeModal() {
 	document.getElementById("dateModal").style.display = "none";
 };
 function copyURL() {
-	
+	document.getElementById("ref-link").select();
+	document.execCommand('copy');
 };
 </script>
 <script src="/scripts/generate_nav.js"></script>
@@ -20,16 +21,14 @@ function copyURL() {
 	<script src="/bootstrap/js/bootstrap.min.js"></script>
 
 	<div id="startup-div">
-		<form method="post">
-			<div class="form-group">
-				<label for="input-id">Load Timeline from ID</label>
+			<div id="startup-input-div" class="form-group">
+				<label id="startup-header-label" for="input-id">Load Timeline from ID</label>
 				<input class="form-control" id="input-id" name="input-id" type="text" placeholder="Timeline ID"></input>
+				<button id="load-timeline-button" class="btn btn-primary" onclick="loadTimeline();">Load</button>
 				<label id="input-err-label" for="input-id"></label>
 			</div>
-		</form>
-		<button id="load-timeline-button" class="btn btn-primary" onclick="loadTimeline();">Load</button>
-		<p>Or...</p>
-		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline(); showHelperText();">New Timeline</button>
+		<p>Or create a new one</p>
+		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline(); showHelperText();">Create Timeline</button>
 	</div>
 
 	<div id="canvas_div">
@@ -47,20 +46,20 @@ function copyURL() {
 		</div>
 
 		<canvas id="canvas" width="1100" height="600"></canvas>
-		<div id="helper-div">
+		<div id="helper-div" class="popup-div">
 			<header>
-				<h2>Welcome! <br>
+				<p>Welcome! <br>
 					To get started, click on either ends of <br>
-					the timeline to select a start/end date.</h2>
+					the timeline to select a start/end date.</p>
 			</header>
 		</div>
-	</div>
 
-	<div id="save-modal">
-		<button class="btn btn-primary" style="float: right" onclick="closeSaveModal();">&times;</button>
-		<p>Timeline saved! Access it later using the code below.</p>
-		<a id="ref-link"></a>
-		<button class="btn btn-primary" onclick="copyURL();">Copy</button>
+		<div id="save-modal" class="popup-div">
+			<button id="close-save-modal" class="btn btn-primary" onclick="closeSaveModal();">&times;</button>
+			<p>Timeline saved! Access it later using the code below:</p>
+			<textarea readonly rows="2" id="ref-link"></textarea>
+			<button id="btn-copy-id" class="btn btn-primary" onclick="copyURL();">Copy</button>
+		</div>
 	</div>
 
 	<div id="dateModal" class="modal">
