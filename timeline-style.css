@@ -41,6 +41,17 @@
 	font-size: 30px;
 }
 
+@keyframes fade-in-animation {
+	0% {
+		transform: translateY(-50%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0%);
+		opacity: 1;
+	}
+}
+
 @keyframes popup-animation {
 	0% {
 		transform: translateY(150%);
@@ -57,6 +68,50 @@
 	100% {
 		transform: translateY(150%);
 	}
+}
+
+@keyframes zoom-out {
+	99% {
+		opacity: 1;
+	}
+	100% {
+		transform: scale(0);
+		opacity: 0;
+	}
+}
+
+#settings-div {
+	position: absolute;
+	display: none;
+	color: white;
+	background-color: rgb(77, 78, 85);
+	border-color: black;
+	border-style: groove;
+	padding: 10px;
+	top: 0; left: 0; right: 0; bottom: 0;
+	margin: auto;
+	height: 215px;
+	width: 250px;
+	animation-duration: 0.4s;
+	z-index: 2;
+}
+
+#settings-div > div {
+	margin-top: 20px;
+}
+
+#settings-div > div > button {
+	margin-bottom: 5px;
+}
+
+#settings-header {
+	font-size: 20px;
+	margin-right: 0px;
+	width: 50%;
+}
+
+#close-settings-btn {
+	float: right;
 }
 
 #save-modal {
@@ -76,6 +131,7 @@
 #ref-link {
 	background-color: rgb(77, 78, 85);
 	color: white;
+	resize: none;
 	border: none;
 }
 
@@ -122,6 +178,8 @@
 }
 
 .input-div {
+	border-style: solid;
+	border-width: 2px;
 	display: inline-block;
 	position: absolute;
 	margin: auto;
@@ -131,7 +189,8 @@
 #input-header {
 	border-style: groove;
 	border-width: 1px;
-	width: inherit;
+	font-size: 16px;
+	width: 100%;
 	cursor: move;
 	display: inline-block;
 	background-color: #dadada;
@@ -140,7 +199,6 @@
 #input-mid {
 	border-style: groove;
 	border-width: 1px;
-	width: inherit;
 	display: inline-block;
 }
 
@@ -150,7 +208,6 @@
 	position: relative;
 	border-style: groove;
 	border-width: 1px;
-	width: inherit;
 	text-align: center;
 }
 
@@ -165,6 +222,7 @@
 #text-area {
 	display: block;
 	width: 100%;
+	resize: none;
 }
 
 #startup-div {

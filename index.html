@@ -34,11 +34,11 @@ function copyURL() {
 	<div id="canvas_div">
 		<div id="option-bar">
 			<div id="option-bar-left">
-				<button id="settings-button" class="btn btn-primary">Settings</button>
+				<button id="settings-button" onclick="openSettingsWindow();" class="btn btn-primary">Settings</button>
 			</div>
 			<div id="option-bar-right">
-				<button onclick="resetTimeline();" id="reset-button" class="btn btn-primary">Reset</button>
-				<button onclick="saveTimeline();" id="save-button" class="btn btn-primary">Save Timeline</button>
+				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">Reset</button>
+				<button id="save-button" onclick="saveTimeline();" class="btn btn-primary">Save Timeline</button>
 			</div>
 			<div id="option-bar-mid">
 				<input id="timeline-name" type="text"></input>
@@ -59,6 +59,17 @@ function copyURL() {
 			<p>Timeline saved! Access it later using the code below:</p>
 			<textarea readonly rows="2" id="ref-link"></textarea>
 			<button id="btn-copy-id" class="btn btn-primary" onclick="copyURL();">Copy</button>
+		</div>
+
+		<div id="settings-div">
+			<span id="settings-header">Settings</span>
+			<button id="close-settings-btn" class="btn btn-primary" onclick="animateCloseSettingsWindow();">&times;</button>
+			<div>
+				<p id="settings-id"></p>
+				<button class="btn btn-primary">Load Timeline</button>
+				<button class="btn btn-primary">New Timeline</button>
+				<button class="btn btn-primary" onclick="showSetupMenu();">Go to Main Menu</button>
+			</div>
 		</div>
 	</div>
 
