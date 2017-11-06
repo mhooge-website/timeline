@@ -10,11 +10,12 @@ if(count($jsonEvents->ids) == 0) {
     return;
 }
 
-if(!($stmt_ins = $conn->prepare("INSERT INTO timeline_events(timeline_id, description, deadline, completed, x_coord, y_coord) VALUES (?, ?, ?, ?, ?, ?)"))) {
+if(!($stmt_ins = $conn->prepare("INSERT INTO timeline_events(timeline_id, description, deadline, completed, minimized, x_coord, y_coord) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)"))) {
     http_response_code(500);
     echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
 }
-if(!($stmt_upd = $conn->prepare("UPDATE timeline_events SET description=?, deadline=?, completed=?, x_coord=?, y_coord=? WHERE id=?"))) {
+if(!($stmt_upd = $conn->prepare("UPDATE timeline_events SET description=?, deadline=?, completed=?, minimized=?, x_coord=?, y_coord=? WHERE id=?"))) {
     http_response_code(500);
     echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
 }
@@ -28,12 +29,13 @@ $descriptions = $jsonEvents->descriptions;
 $deadlines = $jsonEvents->deadlines;
 $completions = $jsonEvents->completions;
 $statuses = $jsonEvents->statuses;
+$minimizes = $jsonEvents->minimizes;
 $x = $jsonEvents->xcoords;
 $y = $jsonEvents->ycoords;
 for($i = 0; $i < count($ids); $i++) {
     if($statuses[$i] == "ajour") continue;
     elseif($ids[$i] < 0) {
-        if (!$stmt_ins->bind_param("sssiii", $jsonEvents->timeline_id, $descriptions[$i], $deadlines[$i], $completions[$i], $x[$i], $y[$i])) {
+        if (!$stmt_ins->bind_param("sssiiii", $jsonEvents->timeline_id, $descriptions[$i], $deadlines[$i], $completions[$i], $minimizes[$i], $x[$i], $y[$i])) {
             http_response_code(500);
             echo "Binding parameters failed: (" . $stmt_ins->errno . ") " . $stmt_ins->error;
         }
@@ -46,7 +48,7 @@ for($i = 0; $i < count($ids); $i++) {
         
     }
     elseif($statuses[$i] == "changed") {
-        if (!$stmt_upd->bind_param("ssiiii", $descriptions[$i], $deadlines[$i], $completions[$i], $x[$i], $y[$i], $ids[$i])) {
+        if (!$stmt_upd->bind_param("ssiiiii", $descriptions[$i], $deadlines[$i], $completions[$i], $minimizes[$i], $x[$i], $y[$i], $ids[$i])) {
             http_response_code(500);
             echo "Binding parameters failed: (" . $stmt_upd->errno . ") " . $stmt_upd->error;
         }
