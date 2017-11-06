@@ -12,8 +12,13 @@ function insertValues() {
     if (!($stmt = $conn->prepare("INSERT INTO timelines(id, start_date, end_date, name) VALUES (?, ?, ?, ?)"))) {
         echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
     }
-    $bytes = random_bytes(12);
-    $id = bin2hex($bytes);
+
+    $id = "";
+    for($i = 0; $i < 24; $i++) {
+        $rand = rand(0, 9);
+        $id .= $rand;
+    }
+
     if (!$stmt->bind_param("ssss", $id, $jsonTimeline->startDate, $jsonTimeline->endDate, $jsonTimeline->name)) {
         echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
     }
