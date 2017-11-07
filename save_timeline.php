@@ -14,11 +14,8 @@ function insertValues() {
         echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
     }
 
-    $id = "";
-    for($i = 0; $i < 24; $i++) {
-        $rand = rand(0, 9);
-        $id .= $rand;
-    }
+    $time = time();
+    $id = hash("md5", $time . $jsonTimeline->name);
 
     if (!$stmt->bind_param("ssss", $id, $jsonTimeline->startDate, $jsonTimeline->endDate, $jsonTimeline->name)) {
         http_response_code(500);
