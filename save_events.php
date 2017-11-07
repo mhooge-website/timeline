@@ -33,7 +33,7 @@ $minimizes = $jsonEvents->minimizes;
 $x = $jsonEvents->xcoords;
 $y = $jsonEvents->ycoords;
 for($i = 0; $i < count($ids); $i++) {
-    if($statuses[$i] == "ajour") continue;
+    if($statuses[$i] == "ajour" || $statuses[$i] == "invalid") continue;
     elseif($ids[$i] < 0) {
         if (!$stmt_ins->bind_param("sssiiii", $jsonEvents->timeline_id, $descriptions[$i], $deadlines[$i], $completions[$i], $minimizes[$i], $x[$i], $y[$i])) {
             http_response_code(500);

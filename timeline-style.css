@@ -90,18 +90,20 @@
 	padding: 10px;
 	top: 0; left: 0; right: 0; bottom: 0;
 	margin: auto;
-	height: 215px;
-	width: 250px;
+	height: 235px;
+	width: 275px;
 	animation-duration: 0.4s;
 	z-index: 2;
 }
 
 #settings-div > div {
+	text-align: center;
 	margin-top: 20px;
 }
 
 #settings-div > div > button {
 	margin-bottom: 5px;
+	width: 100%;
 }
 
 #settings-header {
@@ -171,10 +173,23 @@
 	max-width: 420px;
 }
 
-#helper-div > header {
+#helper-div > p {
 	text-align: center;
 	font-size: 22px;
 	color: #ffffff;
+}
+
+#event-error {
+	color: red;
+	position: absolute;
+	display: block;
+	text-align: center;
+	top: 0; bottom: 0; left: 0; right: 0;
+	font-size: 18px;
+}
+
+#event-error > button {
+	float: right;
 }
 
 .input-div {
@@ -215,8 +230,9 @@
 	margin: auto;
 }
 
-#input-err-label {
+.input-error-label {
 	color: red;
+	width: 100%;
 }
 
 #text-area {
@@ -225,19 +241,40 @@
 	resize: none;
 }
 
-#startup-div {
-	text-align: center;
-	margin: auto;
-	width: 500px;
-	height: 600px;
-	display: block;
+#modal-load-div {
+	color: white;
+	background-color: rgb(77, 78, 85);
+	border-color: black;
+	border-style: groove;
+	padding: 10px;
+	top: 0; bottom: 0; left: 0; right: 0;
+	display: none;
+	position: absolute;
+	height: 120px;
+	z-index: 3;
 }
 
-#startup-header-label {
+#startup-div, #modal-load-div {
+	text-align: center;
+	margin: auto;
+	width: 400px;
+}
+
+#startup-div {
+	display: block;
+	height: 200px;
+}
+
+#modal-load-header-label {
+	width: 75%;
+	margin-bottom: 25px;
+}
+
+#startup-header-label, #modal-load-header-label {
 	font-size: 18px;
 }
 
-#startup-input-div > label {
+#startup-header-label {
 	width: 100%;
 }
 
@@ -250,7 +287,7 @@
 	margin-left: 5px;
 }
 
-#input-id {
+#input-id, #modal-input-id {
 	display: inline-block;
 	width: 270px;
 	margin-right: 0px;
