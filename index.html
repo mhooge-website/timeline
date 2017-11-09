@@ -35,11 +35,21 @@ function copyURL() {
 	<div id="canvas_div">
 		<div id="option-bar">
 			<div id="option-bar-left">
-				<button id="settings-button" onclick="openSettingsWindow();" class="btn btn-primary">Settings</button>
+				<button id="settings-button" onclick="openSettingsWindow();" class="btn btn-primary">
+						<img src="/projects/timeline/icons/settings.png" width="25" height="25" alt="Settings" class="icon-img" />
+				</button>
+				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">Reset</button>
 			</div>
 			<div id="option-bar-right">
-				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">Reset</button>
-				<button id="save-button" onclick="saveTimeline();" class="btn btn-primary">Save Timeline</button>
+				<button id="zoom-out-button" onclick="zoomIn();" class="btn btn-primary">
+					<img src="/projects/timeline/icons/zoom-out.png" width="25" height="25" alt="Zoom Out" class="icon-img" />
+				</button>
+				<button id="zoom-in-button" onclick="zoomOut();" class="btn btn-primary">
+					<img src="/projects/timeline/icons/zoom-in.png" width="25" height="25" alt="Zoom In" class="icon-img" />
+				</button>
+				<button id="save-button" onclick="saveTimeline();" class="btn btn-primary">
+					<img src="/projects/timeline/icons/save.png" width="25" height="25" alt="Save" class="icon-img" />
+				</button>
 			</div>
 			<div id="option-bar-mid">
 				<input id="timeline-name" type="text"></input>
@@ -77,7 +87,7 @@ function copyURL() {
 			<button class="btn btn-primary" onclick="hideLoadInput();">&times;</button>
 			<input class="form-control" id="modal-input-id" name="modal-input-id" type="text" placeholder="Timeline ID"></input>
 			<button id="modal-load-timeline-button" class="btn btn-primary" 
-			onclick="triggerButtonCooldown('modal-load-timeline-button'); loadNewTimeline();"">Load</button>
+			onclick="triggerButtonCooldown('modal-load-timeline-button'); loadNewTimeline();">Load</button>
 			<label id="modal-input-err-label" class="input-error-label" for="input-id"></label>
 		</div>
 	</div>
