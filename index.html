@@ -32,7 +32,7 @@ function copyURL() {
 		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline(); showHelperText();">Create Timeline</button>
 	</div>
 
-	<div id="canvas_div">
+	<div id="content-div">
 		<div id="option-bar">
 			<div id="option-bar-left">
 				<button id="settings-button" onclick="openSettingsWindow();" class="btn btn-primary">
@@ -55,8 +55,6 @@ function copyURL() {
 				<input id="timeline-name" type="text"></input>
 			</div>
 		</div>
-
-		<canvas id="canvas" width="1100" height="600"></canvas>
 		<div id="helper-div" class="popup-div">
 			<p>Welcome! <br>
 				To get started, click on either ends of <br>
@@ -70,25 +68,27 @@ function copyURL() {
 			<textarea readonly rows="2" id="ref-link"></textarea>
 			<button id="btn-copy-id" class="btn btn-primary" onclick="copyURL();">Copy</button>
 		</div>
-
-		<div id="settings-div">
-			<span id="settings-header">Settings</span>
-			<button id="close-settings-btn" class="btn btn-primary" onclick="animateCloseSettingsWindow();">&times;</button>
-			<div>
-				<p id="settings-id"></p>
-				<button class="btn btn-primary" onclick="showLoadInput();">Load Timeline</button>
-				<button class="btn btn-primary" onclick="newTimeline();">New Timeline</button>
-				<button class="btn btn-primary" onclick="showSetupMenu();">Go to Main Menu</button>
+		<div id="canvas_div">
+			<canvas id="canvas" width="1100" height="600"></canvas>
+			<div id="settings-div">
+				<span id="settings-header">Settings</span>
+				<button id="close-settings-btn" class="btn btn-primary" onclick="animateCloseSettingsWindow();">&times;</button>
+				<div>
+					<p id="settings-id"></p>
+					<button class="btn btn-primary" onclick="showLoadInput();">Load Timeline</button>
+					<button class="btn btn-primary" onclick="newTimeline();">New Timeline</button>
+					<button class="btn btn-primary" onclick="showSetupMenu();">Go to Main Menu</button>
+				</div>
 			</div>
-		</div>
 
-		<div id="modal-load-div">
-			<label id="modal-load-header-label" for="modal-input-id">Load Timeline from ID</label>
-			<button class="btn btn-primary" onclick="hideLoadInput();">&times;</button>
-			<input class="form-control" id="modal-input-id" name="modal-input-id" type="text" placeholder="Timeline ID"></input>
-			<button id="modal-load-timeline-button" class="btn btn-primary" 
-			onclick="triggerButtonCooldown('modal-load-timeline-button'); loadNewTimeline();">Load</button>
-			<label id="modal-input-err-label" class="input-error-label" for="input-id"></label>
+			<div id="modal-load-div">
+				<label id="modal-load-header-label" for="modal-input-id">Load Timeline from ID</label>
+				<button class="btn btn-primary" onclick="hideLoadInput();">&times;</button>
+				<input class="form-control" id="modal-input-id" name="modal-input-id" type="text" placeholder="Timeline ID"></input>
+				<button id="modal-load-timeline-button" class="btn btn-primary" 
+				onclick="triggerButtonCooldown('modal-load-timeline-button'); loadNewTimeline();">Load</button>
+				<label id="modal-input-err-label" class="input-error-label" for="input-id"></label>
+			</div>
 		</div>
 	</div>
 

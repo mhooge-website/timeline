@@ -4,17 +4,25 @@
 	margin: auto;
 }
 
-#canvas_div {
+#content-div {
 	width: 90%;
 	height: 100%;
 	position: relative;
 	padding: 5px;
+	overflow: hidden;
 	margin: auto;
 	margin-bottom: 10px;
 	border-style: ridge;
 	border-color: #000000;
-	overflow: hidden;
 	display: none;
+}
+
+#canvas_div {
+	position: relative;
+	padding: 5px;
+	margin: auto;
+	margin-bottom: 10px;
+	overflow: auto;
 }
 
 #option-bar {
