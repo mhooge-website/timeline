@@ -2,7 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="/global-style.css">
-<script src="/scripts/timeline.js"></script>
+<script src="/projects/timeline/timeline.js"></script>
 <script> 
 function closeModal() {
 	document.getElementById("dateModal").style.display = "none";
@@ -21,13 +21,13 @@ function copyURL() {
 	<script src="/bootstrap/js/bootstrap.min.js"></script>
 
 	<div id="startup-div">
-			<div id="startup-input-div" class="form-group">
-				<label id="startup-header-label" for="input-id">Load Timeline from ID</label>
-				<input class="form-control" id="input-id" name="input-id" type="text" placeholder="Timeline ID"></input>
-				<button id="load-timeline-button" class="btn btn-primary" 
-				onclick="triggerButtonCooldown('modal-load-timeline-button'); loadTimeline();">Load</button>
-				<label id="input-err-label" class="input-error-label" for="input-id"></label>
-			</div>
+		<div id="startup-input-div" class="form-group">
+			<label id="startup-header-label" for="input-id">Load Timeline from ID</label>
+			<input class="form-control" id="input-id" name="input-id" type="text" placeholder="Timeline ID"></input>
+			<button id="load-timeline-button" class="btn btn-primary" 
+			onclick="triggerButtonCooldown('modal-load-timeline-button'); loadTimeline();">Load</button>
+			<label id="input-err-label" class="input-error-label" for="input-id"></label>
+		</div>
 		<p>Or create a new one</p>
 		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline(); showHelperText();">Create Timeline</button>
 	</div>
@@ -36,9 +36,11 @@ function copyURL() {
 		<div id="option-bar">
 			<div id="option-bar-left">
 				<button id="settings-button" onclick="openSettingsWindow();" class="btn btn-primary">
-						<img src="/projects/timeline/icons/settings.png" width="25" height="25" alt="Settings" class="icon-img" />
+					<img src="/projects/timeline/icons/settings.png" width="25" height="25" alt="Settings" class="icon-img" />
 				</button>
-				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">Reset</button>
+				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">
+					<img src="/projects/timeline/icons/trash.png" width="25" height="25" alt="Reset" class="icon-img" />
+				</button>
 			</div>
 			<div id="option-bar-right">
 				<button id="zoom-out-button" onclick="zoomIn(1);" class="btn btn-primary">
@@ -95,10 +97,10 @@ function copyURL() {
 	<div id="dateModal" class="modal">
 		<div class="modal-content">
 			<button class="modal-buttons" onclick="closeModal();">&times;</button>
-			<form>
+			<div>
 				Input a Date:
 				<input type="date" name="date" id="dateForm">
-			</form>
+			</div>
 			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
 		</div>
 	</div>
