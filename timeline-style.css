@@ -17,6 +17,10 @@
 	display: none;
 }
 
+#top_bar {
+	margin-bottom: 40px;
+}
+
 #canvas_div {
 	position: relative;
 	padding: 5px;
