@@ -698,6 +698,12 @@ function showSetupMenu() {
 	document.getElementById("startup-div").style.display = "block";
 }
 
+function openSaveModal() {
+	document.getElementById("ref-link").textContent = "mhooge.com/projects/timeline/?id="+timelineId;
+	document.getElementById("save-modal").style.display = "inline-block";
+	document.getElementById("save-modal").style.animationPlayState = "running";
+}
+
 function closeSaveModal() {
 	document.getElementById("save-modal").style.display = "none";
 }
@@ -808,9 +814,7 @@ function saveChangesToDB() {
 			httpEvents.send();
 
 			if(id == null) {
-				document.getElementById("ref-link").textContent = timelineId;
-				document.getElementById("save-modal").style.display = "inline-block";
-				document.getElementById("save-modal").style.animationPlayState = "running";
+				openSaveModal();
 			}
 		}
 	};

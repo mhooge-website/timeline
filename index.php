@@ -66,7 +66,7 @@ function copyURL() {
 
 		<div id="save-modal" class="popup-div">
 			<button id="close-save-modal" class="btn btn-primary" onclick="closeSaveModal();">&times;</button>
-			<p>Timeline saved! Access it later using the code below:</p>
+			<p>Timeline saved! Access it later using the link below:</p>
 			<textarea readonly rows="2" id="ref-link"></textarea>
 			<button id="btn-copy-id" class="btn btn-primary" onclick="copyURL();">Copy</button>
 		</div>
@@ -106,3 +106,8 @@ function copyURL() {
 	</div>
 </body>
 </html>
+
+<?php
+	$id = $_GET["id"];
+	echo "<script type='text/javascript'>loadFromDB('$id');</script>";
+?>
