@@ -71,6 +71,8 @@ var timelineId = null;
 var debug = true;
 
 function initialize() {
+	var a = "z";
+	alert(a.charCodeAt(0));
 	document.getElementById("startup-div").style.display = "none";
 	document.getElementById("content-div").style.display = "block";
 	canvas = document.getElementById("canvas");
