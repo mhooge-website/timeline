@@ -108,6 +108,8 @@ function copyURL() {
 </html>
 
 <?php
-	$id = $_GET["id"];
-	echo "<script type='text/javascript'>loadFromDB('$id');</script>";
+	if(isset($_GET["id"])) {
+		$id = $_GET["id"];
+		echo "<script type='text/javascript'>loadFromDB('$id');</script>";
+	}
 ?>

@@ -91,14 +91,8 @@ function initialize() {
 	
 	window.addEventListener("wheel", function(e) {
 		let scroll = e.deltaY;
-		if(scroll > 0) {
-			zoomIn(parseInt(Math.sqrt(scroll), 10));
-			console.log(Math.sqrt(scroll))
-		}
-		else {
-			console.log(Math.sqrt(scroll*-1));
-			zoomOut(parseInt(-(Math.sqrt(scroll*-1)), 10));
-		}
+		if(scroll > 0) zoomIn(scroll/100);
+		else zoomOut(-scroll/100);
 	});
 	window.addEventListener("resize", function(e) { onResized(); });
 	canvas.addEventListener("mousemove", function(e) {
@@ -196,10 +190,15 @@ function initialize() {
 		}
 	});
 	if(debug) {
+		var now = new Date();
+		console.log(getISODateString(now));
+		now.setTime(now.getTime() - (1000*60*60*24*2));
+		console.log(getISODateString(now));
 		dateSet = "start";
-		setDate("2017-10-20");
+		setDate(getISODateString(now));
+		now.setTime(now.getTime() + (1000*60*60*24*5));
 		dateSet = "end";
-		setDate("2017-11-15")
+		setDate(getISODateString(now))
 	}
 
 	document.getElementById("timeline-name").value = "My Timeline";
@@ -698,8 +697,12 @@ function showSetupMenu() {
 	document.getElementById("startup-div").style.display = "block";
 }
 
+function getTimelineURL() {
+	return "mhooge.com/projects/timeline/?id="+timelineId;
+}
+
 function openSaveModal() {
-	document.getElementById("ref-link").textContent = "mhooge.com/projects/timeline/?id="+timelineId;
+	document.getElementById("ref-link").textContent = getTimelineURL();
 	document.getElementById("save-modal").style.display = "inline-block";
 	document.getElementById("save-modal").style.animationPlayState = "running";
 }
@@ -710,7 +713,7 @@ function closeSaveModal() {
 
 function openSettingsWindow() {
 	var settings = document.getElementById("settings-div");
-	if(timelineId != null) document.getElementById("settings-id").innerHTML = "Timeline ID: " + timelineId;
+	if(timelineId != null) document.getElementById("settings-id").innerHTML = "Timeline URL: " + getTimelineURL();
 	else document.getElementById("settings-id").innerHTML = "Timeline ID:<br>Not generated yet.";
 
 	settings.style.display = "inline-block";
@@ -743,6 +746,7 @@ function checkEventIsEmpty(event) {
 }
 
 function saveTimeline() {
+	if(!isStartAndEndDateSet()) return;
 	saveChangesToDB();
 }
 
