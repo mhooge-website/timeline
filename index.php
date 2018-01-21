@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="/global-style.css">
-<script src="/projects/timeline/timeline.js"></script>
-<script> 
-function closeModal() {
-	document.getElementById("dateModal").style.display = "none";
-};
-function copyURL() {
-	document.getElementById("ref-link").select();
-	document.execCommand('copy');
-};
-</script>
-<script src="/scripts/generate_nav.js"></script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112742388-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112742388-1');
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="/global-style.css">
+	<script src="/projects/timeline/timeline.js"></script>
+	<script> 
+	function closeModal() {
+		document.getElementById("dateModal").style.display = "none";
+	};
+	function copyURL() {
+		document.getElementById("ref-link").select();
+		document.execCommand('copy');
+	};
+	</script>
+	<script src="/scripts/generate_nav.js"></script>
 </head>
 <body onload="generate_nav('Interactive Timeline');">
 	<link rel="stylesheet" type="text/css" href="/projects/timeline/timeline-style.css">
