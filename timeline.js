@@ -68,7 +68,7 @@ var toolTip = {
 };
 var timelineId = null;
 
-var debug = true;
+var debug = false;
 
 function initialize() {
 	document.getElementById("startup-div").style.display = "none";
@@ -169,16 +169,15 @@ function initialize() {
 		}
 	});
 	canvas.addEventListener("click", function(e) {
+		animateHideHelperText();
 		if(highlightedEvent != null) {
 			setEventMinimized(highlightedEvent, false);
 		}
 		else if(highlightedStart) {
-			animateHideHelperText();
 			dateSet = "start";
 			showDateModal();
 		}
 		else if(highlightedEnd) {
-			animateHideHelperText();
 			dateSet = "end";
 			showDateModal();
 		}
@@ -189,17 +188,13 @@ function initialize() {
 			}
 		}
 	});
-	if(debug) {
-		var now = new Date();
-		console.log(getISODateString(now));
-		now.setTime(now.getTime() - (1000*60*60*24*2));
-		console.log(getISODateString(now));
-		dateSet = "start";
-		setDate(getISODateString(now));
-		now.setTime(now.getTime() + (1000*60*60*24*5));
-		dateSet = "end";
-		setDate(getISODateString(now))
-	}
+	var now = new Date();
+	now.setTime(now.getTime() - (1000*60*60*24));
+	dateSet = "start";
+	setDate(getISODateString(now));
+	now.setTime(now.getTime() + (1000*60*60*24*7));
+	dateSet = "end";
+	setDate(getISODateString(now))
 
 	document.getElementById("timeline-name").value = "My Timeline";
 }
@@ -636,7 +631,7 @@ function onDragEvent(event, e) {
 
 function onDragEnded(event, e) {
 	document.onmouseup = null;
-    document.onmousemove = null;
+	document.onmousemove = null;
 
 	drawTimeline();
 }
@@ -837,7 +832,7 @@ function zoomOut(amount) {
 }
 
 function zoomIn(amount) {
-	if(zoomLevel - amount < 0) return;
+	if(zoomLevel + amount < 0) return;
 	eraseAll();
 	zoomLevel -= amount;
 	if(document.getElementById("zoom-in-button").disabled) document.getElementById("zoom-in-button").disabled = false;
