@@ -68,7 +68,7 @@ var toolTip = {
 };
 var timelineId = null;
 
-var debug = false;
+var debug = true;
 
 function initialize() {
 	document.getElementById("startup-div").style.display = "none";
@@ -88,12 +88,12 @@ function initialize() {
 	ctx.font = "20px serif";
 	
 	calculateCanvasVariables();
-	
+	/*
 	window.addEventListener("wheel", function(e) {
 		let scroll = e.deltaY;
 		if(scroll > 0) zoomIn(scroll/100);
 		else zoomOut(-scroll/100);
-	});
+	}); */
 	window.addEventListener("resize", function(e) { onResized(); });
 	canvas.addEventListener("mousemove", function(e) {
 		var pos = getMousePos(e.x, e.y);
@@ -169,15 +169,16 @@ function initialize() {
 		}
 	});
 	canvas.addEventListener("click", function(e) {
-		animateHideHelperText();
 		if(highlightedEvent != null) {
 			setEventMinimized(highlightedEvent, false);
 		}
 		else if(highlightedStart) {
+			animateHideHelperText();
 			dateSet = "start";
 			showDateModal();
 		}
 		else if(highlightedEnd) {
+			animateHideHelperText();
 			dateSet = "end";
 			showDateModal();
 		}
@@ -188,13 +189,17 @@ function initialize() {
 			}
 		}
 	});
-	var now = new Date();
-	now.setTime(now.getTime() - (1000*60*60*24));
-	dateSet = "start";
-	setDate(getISODateString(now));
-	now.setTime(now.getTime() + (1000*60*60*24*7));
-	dateSet = "end";
-	setDate(getISODateString(now))
+	if(debug) {
+		var now = new Date();
+		console.log(getISODateString(now));
+		now.setTime(now.getTime() - (1000*60*60*24*2));
+		console.log(getISODateString(now));
+		dateSet = "start";
+		setDate(getISODateString(now));
+		now.setTime(now.getTime() + (1000*60*60*24*5));
+		dateSet = "end";
+		setDate(getISODateString(now))
+	}
 
 	document.getElementById("timeline-name").value = "My Timeline";
 }
@@ -631,7 +636,7 @@ function onDragEvent(event, e) {
 
 function onDragEnded(event, e) {
 	document.onmouseup = null;
-	document.onmousemove = null;
+    document.onmousemove = null;
 
 	drawTimeline();
 }
@@ -832,7 +837,7 @@ function zoomOut(amount) {
 }
 
 function zoomIn(amount) {
-	if(zoomLevel + amount < 0) return;
+	if(zoomLevel - amount < 0) return;
 	eraseAll();
 	zoomLevel -= amount;
 	if(document.getElementById("zoom-in-button").disabled) document.getElementById("zoom-in-button").disabled = false;
