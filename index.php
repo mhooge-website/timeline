@@ -118,8 +118,18 @@
 </html>
 
 <?php
+	$id = null;
+
+	$url_split = explode("/", $_SERVER["REQUEST_URI"]);
+	$last_element = $url_split[count($url_split)-1];
 	if(isset($_GET["id"])) {
 		$id = $_GET["id"];
+	}
+	else if($last_element != "timeline" && $last_element != "") {
+		$id = $last_element;
+	}
+		
+	if ($id != null) {
 		echo "<script type='text/javascript'>loadFromDB('$id');</script>";
 	}
 ?>

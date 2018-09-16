@@ -68,13 +68,13 @@ var toolTip = {
 };
 var timelineId = null;
 
-var debug = true;
+var debug = false;
 
 function initialize() {
 	document.getElementById("startup-div").style.display = "none";
 	document.getElementById("content-div").style.display = "block";
 	canvas = document.getElementById("canvas");
-
+	
 	zoomLevel = 6;
 	zoomValues = [0.1, 0.25, 0.5, 0.75, 0.8, 0.9, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4];
 	endDate = null;
@@ -698,7 +698,10 @@ function showSetupMenu() {
 }
 
 function getTimelineURL() {
-	return "mhooge.com/projects/timeline/?id="+timelineId;
+	let index = window.location.href.lastIndexOf("timeline");
+	let baseLoc = window.location.href.substring(0, index) + "timeline/";
+
+	return baseLoc+timelineId;
 }
 
 function openSaveModal() {
