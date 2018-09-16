@@ -1,6 +1,3 @@
-/**
- * 
-*/
 // Timeline pos values
 const startX = 75;
 var endX;
@@ -70,7 +67,7 @@ var timelineId = null;
 
 var debug = false;
 
-function initialize() {
+function initialize(id=null) {
 	document.getElementById("startup-div").style.display = "none";
 	document.getElementById("content-div").style.display = "block";
 	canvas = document.getElementById("canvas");
@@ -86,8 +83,13 @@ function initialize() {
 	events = new Array();
 	
 	ctx.font = "20px serif";
+
+	setTimeout(() => {
+		calculateCanvasVariables();
+		if(id != null) loadFromDB(id);
+		else drawTimeline();
+	}, 200);
 	
-	calculateCanvasVariables();
 	/*
 	window.addEventListener("wheel", function(e) {
 		let scroll = e.deltaY;
@@ -217,9 +219,14 @@ function onResized() {
 function calculateCanvasVariables() {
 	let zoomWidth = 1;
 	zoomWidth = zoomValues[zoomLevel];
+
+	let contentDiv = $("#content-div").get(0);
+	contentDiv.style.height = (window.innerHeight-contentDiv.offsetTop-50) + "px";
+
 	let div = document.getElementById("canvas_div");
-	ctx.canvas.width  = (div.offsetWidth-10) * zoomWidth;
-	ctx.canvas.height = window.innerHeight-300;
+	div.style.height = (contentDiv.offsetHeight - ($("#option-bar").get(0).offsetHeight)) + "px";
+	canvas.width  = (div.offsetWidth-10) * zoomWidth;
+	canvas.height = contentDiv.offsetHeight - ($("#option-bar").get(0).offsetHeight) - 20;
 
 	endX = ((startX + canvas.width)-(startX*2));
 	midY = canvas.height/2;
@@ -315,10 +322,10 @@ function loadFromDB(id) {
 							for(i = 0; i < jsonMsg.length; i++) {
 								var xoffset = canvas.getBoundingClientRect().left;
 
-								var event = createEvent(jsonMsg[i][5], jsonMsg[i][6]);
+								var event = createEvent(jsonMsg[i][5], canvas.height*(jsonMsg[i][6]/100), new Date(getDeformattedDateString(jsonMsg[i][2])));
 
 								event.isCompleted = jsonMsg[i][3] == 1;
-								createEventDiv(jsonMsg[i][5], jsonMsg[i][6], event);
+								createEventDiv(event.xPos, event.yPos, event);
 								event.header.textContent = jsonMsg[i][2];
 								event.txt.value = jsonMsg[i][1];
 								event.id = jsonMsg[i][0];
@@ -444,7 +451,7 @@ function addTimelineEvent(x, y) {
 	drawTimeline();
 }
 
-function createEvent(x, y) {
+function createEvent(x, y, date=null) {
 	return {
 		id: -1,
 		xPos: x,
@@ -452,7 +459,7 @@ function createEvent(x, y) {
 		header: null,
 		div: null,
 		txt: null,
-		date: null,
+		date: date,
 		isCompleted: false,
 		status: "new",
 		minimizedIcon: null,
@@ -476,16 +483,19 @@ function createEvent(x, y) {
 }
 
 function createEventDiv(x, y, event) {
+	console.log(y);
 	var inputDiv = document.createElement("div");
 	inputDiv.className = "input-div";
 
 	var headerDiv = document.createElement("div");
 	headerDiv.id = "input-header";
 
+	let date = event.date == null ? getDateFromCoord(x) : event.date;
+	
 	var p  = document.createElement("span");
 	p.style.pointerEvents = "none";
 	p.style.userSelect = "none";
-	p.textContent = getFormattedDateString(getDateFromCoord(x));
+	p.textContent = getFormattedDateString(date);
 	headerDiv.appendChild(p);
 
 	let closeButton = document.createElement("button");
@@ -550,16 +560,17 @@ function createEventDiv(x, y, event) {
 	event.header = p;
 
 	let divY = y - (inputDiv.offsetHeight/2);
-	
+
 	if(!checkAxisConformity(inputDiv, x, y, "left")) x = startX;
 	else if(!checkAxisConformity(inputDiv, x, y,  "right")) x = endX;
 	if(!checkAxisConformity(inputDiv, x, divY,  "up")) divY = 0;
 	else if(!checkAxisConformity(inputDiv, x, divY,  "down")) divY = (canvas.height) - inputDiv.offsetHeight;
 
-	inputDiv.style.left = (x - (inputDiv.offsetWidth/2)) + "px";
+	let xCoord = event.date == null ? x : getCoordFromDate(date);
+	inputDiv.style.left = (xCoord - (inputDiv.offsetWidth/2)) + "px";
 	inputDiv.style.top = divY + "px";
 
-	event.date = getDateFromCoord(x);
+	if (event.date == null) event.date = getDateFromCoord(x);
 	event.setCompleted(checkCompleted.checked);
 	event.checkDeadlineSeverity();
 }
@@ -594,6 +605,10 @@ function setEventMinimized(event, isMini) {
 	}
 	event.status = "changed";
 	refresh();
+}
+
+function getYPct(y) {
+	return (y/this.canvas.height)*100;
 }
 
 function dragStarted(event, e) {
@@ -789,7 +804,7 @@ function saveChangesToDB() {
 				minimizes[i] = events[i].minimizedIcon !== null ? 1 : 0;
 				let pos = getMidPoint(events[i]);
 				xcoords[i] = pos.x;
-				ycoords[i] = pos.y;
+				ycoords[i] = getYPct(pos.y);
 			}
 
 			var eventses = { "ids":ids, "timeline_id":timelineId, "descriptions":descriptions, "deadlines":deadlines, "completions":completions, 

@@ -39,7 +39,7 @@
 			<label id="input-err-label" class="input-error-label" for="input-id"></label>
 		</div>
 		<p>Or create a new one</p>
-		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); drawTimeline(); showHelperText();">Create Timeline</button>
+		<button id="new-timeline-button" class="btn btn-primary" onclick="initialize(); showHelperText();">Create Timeline</button>
 	</div>
 
 	<div id="content-div">
@@ -130,6 +130,6 @@
 	}
 		
 	if ($id != null) {
-		echo "<script type='text/javascript'>loadFromDB('$id');</script>";
+		echo "<script type='text/javascript'>initialize('$id');</script>";
 	}
 ?>

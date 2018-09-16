@@ -5,8 +5,7 @@
 }
 
 #content-div {
-	width: 90%;
-	height: 100%;
+	width: 95%;
 	position: relative;
 	padding: 5px;
 	overflow: hidden;
@@ -23,6 +22,7 @@
 
 #canvas_div {
 	position: relative;
+	height: 100%;
 	padding: 5px;
 	margin: auto;
 	margin-bottom: 10px;
