@@ -87,7 +87,10 @@ function initialize(id=null) {
 	setTimeout(() => {
 		calculateCanvasVariables();
 		if(id != null) loadFromDB(id);
-		else drawTimeline();
+		else {
+			calculateTickCoords();
+			drawTimeline();
+		}
 	}, 200);
 	
 	/*
@@ -191,14 +194,12 @@ function initialize(id=null) {
 			}
 		}
 	});
-	if(debug) {
+	if(debug || id == null) {
 		var now = new Date();
-		console.log(getISODateString(now));
-		now.setTime(now.getTime() - (1000*60*60*24*2));
-		console.log(getISODateString(now));
+		now.setTime(now.getTime() - (1000*60*60*24));
 		dateSet = "start";
 		setDate(getISODateString(now));
-		now.setTime(now.getTime() + (1000*60*60*24*5));
+		now.setTime(now.getTime() + (1000*60*60*24*2));
 		dateSet = "end";
 		setDate(getISODateString(now))
 	}
@@ -224,9 +225,9 @@ function calculateCanvasVariables() {
 	contentDiv.style.height = (window.innerHeight-contentDiv.offsetTop-50) + "px";
 
 	let div = document.getElementById("canvas_div");
-	div.style.height = (contentDiv.offsetHeight - ($("#option-bar").get(0).offsetHeight)) + "px";
+	div.style.height = (contentDiv.offsetHeight - ($("#option-bar").get(0).offsetHeight) - 20) + "px";
 	canvas.width  = (div.offsetWidth-10) * zoomWidth;
-	canvas.height = contentDiv.offsetHeight - ($("#option-bar").get(0).offsetHeight) - 20;
+	canvas.height = div.offsetHeight-35;
 
 	endX = ((startX + canvas.width)-(startX*2));
 	midY = canvas.height/2;
@@ -483,7 +484,6 @@ function createEvent(x, y, date=null) {
 }
 
 function createEventDiv(x, y, event) {
-	console.log(y);
 	var inputDiv = document.createElement("div");
 	inputDiv.className = "input-div";
 
@@ -631,8 +631,6 @@ function onDragEvent(event, e) {
 	let divX = event.div.offsetLeft - (event.xPos - x);
 	let divY = event.div.offsetTop - (event.yPos - y);
 	
-	if(!checkAllAxisConformity(event.div, divX + event.div.offsetWidth/2, divY)) return;
-
 	eraseAll();
 
 	event.div.style.left = divX + "px";
@@ -651,9 +649,40 @@ function onDragEvent(event, e) {
 
 function onDragEnded(event, e) {
 	document.onmouseup = null;
-    document.onmousemove = null;
+	document.onmousemove = null;
+	
+	fixAxisConformity(event);
 
 	drawTimeline();
+}
+
+function fixAxisConformity(event) {
+	let midP = getMidPoint(event);
+	let botY = event.div.offsetTop + event.div.offsetHeight;
+	if (!checkAxisConformity(event.div, midP.x, midP.y, "left")) {
+		let newX = getCoordFromDate(startDate);
+		event.div.style.left = (newX - event.div.offsetWidth/2) + "px";
+		event.xPos = newX;
+		event.date = startDate;
+		event.header.textContent = getFormattedDateString(event.date);
+	}
+	else if (!checkAxisConformity(event.div, midP.x, midP.y, "right")) {
+		let newX = getCoordFromDate(endDate);
+		event.div.style.left = (newX - event.div.offsetWidth/2) + "px";
+		event.xPos = newX;
+		event.date = endDate;
+		event.header.textContent = getFormattedDateString(event.date);
+	}
+	if (!checkAxisConformity(event.div, midP.x, event.div.offsetTop, "up")) {
+		let newY = 0;
+		event.div.style.top = newY + "px";
+		event.yPos = newY;
+	}
+	else if (!checkAxisConformity(event.div, midP.x, botY, "down")) {
+		let newY = canvas.offsetTop+canvas.height;
+		event.div.style.top = (newY-event.div.offsetHeight) + "px";
+		event.yPos = newY;
+	}
 }
 
 function checkAllAxisConformity(div, x, y) {
@@ -864,6 +893,7 @@ function zoomIn(amount) {
 }
 
 function newTimeline() {
+	closeSettingsWindow();
 	clearAll();
 	initialize();
 	drawTimeline();
@@ -1008,6 +1038,7 @@ function calculateTickCoords() {
 	for(i = 0; i < diff; i++) {
 		ticks.push(startX + (factor*i));
 	}
+	console.log(ticks);
 }
 
 function eraseMinorTicks() {
