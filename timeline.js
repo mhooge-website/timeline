@@ -300,7 +300,6 @@ function loadFromDB(id) {
 				return;
 			}
 			else {
-				initialize();
 				hideHelperText();
 
 				var responseArr = JSON.parse(this.responseText)[0];
@@ -714,8 +713,14 @@ function getMidPoint(event) {
 }
 
 function drawEventConnectingLine(event) {
-	let pos = getMidPoint(event);
-	drawLine(pos.x, pos.y, pos.x, midY);
+	let divPos = getMidPoint(event);
+	let datePos = getCoordFromDate(event.date).toFixed(0);
+
+	if (datePos != divPos.x) {
+		drawLine(divPos.x, divPos.y, divPos.x, midY+((midY-divPos.y)/2));
+	}
+	
+	drawLine(divPos.x, divPos.y, divPos.x, midY);
 }
 
 function drawMinimizedEvent(event) {
@@ -1038,7 +1043,6 @@ function calculateTickCoords() {
 	for(i = 0; i < diff; i++) {
 		ticks.push(startX + (factor*i));
 	}
-	console.log(ticks);
 }
 
 function eraseMinorTicks() {
