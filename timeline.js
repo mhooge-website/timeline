@@ -821,7 +821,7 @@ function getBaseURL() {
 function getTimelineURL() {
 	let baseLoc = getBaseURL();
 
-	return baseLoc+"/"+timelineId;
+	return baseLoc+"/\n"+timelineId;
 }
 
 function openSaveModal() {
