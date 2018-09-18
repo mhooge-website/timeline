@@ -100,17 +100,30 @@ function initialize(id=null) {
 		else zoomOut(-scroll/100);
 	}); */
 	window.addEventListener("resize", function(e) { onResized(); });
+	// Add listener for determining whether the mouse is hovering above a minimized event,
+	// as well as determining whether the mouse is hovering above a event-connecting line.
 	canvas.addEventListener("mousemove", function(e) {
 		var pos = getMousePos(e.x, e.y);
 		for(i = 0; i < events.length; i++) {
-			if(events[i].minimizedIcon == null) continue;
 			let event = events[i];
-			let miniX = event.minimizedIcon.x;
-			if(pos.x >= miniX-5 && pos.x < miniX+5 && pos.y > midY - 8 && pos.y < midY + 8) {
-				highlightedEvent = event;
-				break;
+			let midX = getCoordFromDate(event.date);
+			if (pos.x >= midX-5 && pos.x < midX+5) {
+				if(event.minimizedIcon != null) {
+					if(pos.y > midY - 8 && pos.y < midY + 8) {
+						highlightedEvent = event;
+						break;
+					}
+					else highlightedEvent = null;
+				}
+				else {
+					if (event.div.offsetTop < midY) {
+						
+					}
+					else {
+
+					}
+				}
 			}
-			else highlightedEvent = null;
 		}
 	});
 	canvas.addEventListener("mousemove", function(e) {
@@ -227,7 +240,7 @@ function calculateCanvasVariables() {
 	let div = document.getElementById("canvas_div");
 	div.style.height = (contentDiv.offsetHeight - ($("#option-bar").get(0).offsetHeight) - 20) + "px";
 	canvas.width  = (div.offsetWidth-10) * zoomWidth;
-	canvas.height = div.offsetHeight-35;
+	canvas.height = div.offsetHeight*0.99;
 
 	endX = ((startX + canvas.width)-(startX*2));
 	midY = canvas.height/2;
@@ -542,7 +555,7 @@ function createEventDiv(x, y, event) {
 
 	document.getElementById("canvas_div").appendChild(inputDiv);
 	
-	headerDiv.onmousedown = function(e) { dragStarted(event, e); };
+	headerDiv.onmousedown = function(e) { divDragStarted(event, e); };
 
 	textArea.oninput = function(e) { 
 		event.status = "changed"; 
@@ -610,18 +623,18 @@ function getYPct(y) {
 	return (y/this.canvas.height)*100;
 }
 
-function dragStarted(event, e) {
+function divDragStarted(event, e) {
 	let pos = getMousePos(e.clientX, e.clientY);
 
 	event.xPos = pos.x;
 	event.yPos = pos.y;
 
 	event.status = "changed";
-	document.onmouseup = function(e) { onDragEnded(event, e); };
-	document.onmousemove = function(e) { onDragEvent(event, e); };
+	document.onmouseup = function(e) { onDivDragEnded(event, e); };
+	document.onmousemove = function(e) { onDivDragEvent(event, e); };
 }
 
-function onDragEvent(event, e) {
+function onDivDragEvent(event, e) {
 	let pos = getMousePos(e.clientX, e.clientY);
 
 	let x = pos.x;
@@ -638,32 +651,57 @@ function onDragEvent(event, e) {
 	event.xPos = x;
 	event.yPos = y;
 
-	event.date = getDateFromCoord(getMidPoint(event).x);
-	event.header.textContent = getFormattedDateString(event.date);
+	drawTimeline();
+}
 
-	event.checkDeadlineSeverity();
+function onDivDragEnded(event, e) {
+	document.onmouseup = null;
+	document.onmousemove = null;
+	
+	if (!fixAxisConformity(event)) eraseAll();
 
 	drawTimeline();
 }
 
-function onDragEnded(event, e) {
+function lineDragStarted(event, e) {
+	event.status = "changed";
+	document.onmouseup = function(e) { onLineDragEnded(event, e); };
+	document.onmousemove = function(e) { onLineDragEvent(event, e); };
+}
+
+function onLineDragEvent(event, e) {
+	let pos = getMousePos(e.clientX, e.clientY);
+
+	let x = pos.x;
+	let dateX = getCoordFromDate(event.date);
+	
+	let newX = dateX - (dateX - x);
+	
+	eraseAll();
+
+	event.date = getDateFromCoord(newX);
+
+	drawTimeline();
+}
+
+function onLineDragEnded(event, e) {
 	document.onmouseup = null;
 	document.onmousemove = null;
 	
-	fixAxisConformity(event);
+	if(!fixAxisConformity(event)) eraseAll();
 
 	drawTimeline();
 }
 
 function fixAxisConformity(event) {
 	let midP = getMidPoint(event);
-	let botY = event.div.offsetTop + event.div.offsetHeight;
 	if (!checkAxisConformity(event.div, midP.x, midP.y, "left")) {
 		let newX = getCoordFromDate(startDate);
 		event.div.style.left = (newX - event.div.offsetWidth/2) + "px";
 		event.xPos = newX;
 		event.date = startDate;
 		event.header.textContent = getFormattedDateString(event.date);
+		return false;
 	}
 	else if (!checkAxisConformity(event.div, midP.x, midP.y, "right")) {
 		let newX = getCoordFromDate(endDate);
@@ -671,17 +709,21 @@ function fixAxisConformity(event) {
 		event.xPos = newX;
 		event.date = endDate;
 		event.header.textContent = getFormattedDateString(event.date);
+		return false;
 	}
 	if (!checkAxisConformity(event.div, midP.x, event.div.offsetTop, "up")) {
 		let newY = 0;
 		event.div.style.top = newY + "px";
 		event.yPos = newY;
+		return false;
 	}
-	else if (!checkAxisConformity(event.div, midP.x, botY, "down")) {
+	else if (!checkAxisConformity(event.div, midP.x, event.div.offsetTop, "down")) {
 		let newY = canvas.offsetTop+canvas.height;
 		event.div.style.top = (newY-event.div.offsetHeight) + "px";
 		event.yPos = newY;
+		return false;
 	}
+	return true;
 }
 
 function checkAllAxisConformity(div, x, y) {
@@ -717,10 +759,13 @@ function drawEventConnectingLine(event) {
 	let datePos = getCoordFromDate(event.date).toFixed(0);
 
 	if (datePos != divPos.x) {
-		drawLine(divPos.x, divPos.y, divPos.x, midY+((midY-divPos.y)/2));
+		let botY = event.div.offsetTop+event.div.offsetHeight;
+		let midLineY = divPos.y < midY ? botY + 10 : event.div.offsetTop - 10;
+		drawLine(divPos.x, divPos.y, divPos.x, midLineY);
+		drawLine(divPos.x, midLineY, datePos, midLineY);
+		drawLine(datePos, midLineY, datePos, midY);
 	}
-	
-	drawLine(divPos.x, divPos.y, divPos.x, midY);
+	else drawLine(divPos.x, divPos.y, divPos.x, midY);
 }
 
 function drawMinimizedEvent(event) {
