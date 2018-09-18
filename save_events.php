@@ -35,7 +35,7 @@ $y = $jsonEvents->ycoords;
 for($i = 0; $i < count($ids); $i++) {
     if($statuses[$i] == "ajour" || $statuses[$i] == "invalid") continue;
     elseif($ids[$i] < 0) {
-        if (!$stmt_ins->bind_param("sssiiii", $jsonEvents->timeline_id, $descriptions[$i], $deadlines[$i], $completions[$i], $minimizes[$i], $x[$i], $y[$i])) {
+        if (!$stmt_ins->bind_param("sssiidd", $jsonEvents->timeline_id, $descriptions[$i], $deadlines[$i], $completions[$i], $minimizes[$i], $x[$i], $y[$i])) {
             http_response_code(500);
             echo "Binding parameters failed: (" . $stmt_ins->errno . ") " . $stmt_ins->error;
         }
@@ -48,7 +48,7 @@ for($i = 0; $i < count($ids); $i++) {
         
     }
     elseif($statuses[$i] == "changed") {
-        if (!$stmt_upd->bind_param("ssiiiii", $descriptions[$i], $deadlines[$i], $completions[$i], $minimizes[$i], $x[$i], $y[$i], $ids[$i])) {
+        if (!$stmt_upd->bind_param("ssiiddi", $descriptions[$i], $deadlines[$i], $completions[$i], $minimizes[$i], $x[$i], $y[$i], $ids[$i])) {
             http_response_code(500);
             echo "Binding parameters failed: (" . $stmt_upd->errno . ") " . $stmt_upd->error;
         }

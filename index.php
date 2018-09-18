@@ -51,6 +51,9 @@
 				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">
 					<img src="/projects/timeline/icons/trash.png" width="25" height="25" alt="Reset" class="icon-img" />
 				</button>
+				<button id="help-button" class="btn btn-primary">
+					<img src="/projects/timeline/icons/questionmark.png" width="25" height="25" alt="Help" class="icon-img" />
+				</button>
 			</div>
 			<div id="option-bar-right">
 				<button id="zoom-out-button" onclick="zoomIn(1);" class="btn btn-primary">
@@ -64,7 +67,7 @@
 				</button>
 			</div>
 			<div id="option-bar-mid">
-				<input id="timeline-name" type="text"></input>
+				<input id="timeline-name" type="text"/>
 			</div>
 		</div>
 		<div id="helper-div" class="popup-div">

@@ -14,6 +14,7 @@ var highlightedPoint = false;
 var highlightedStart = false;
 var highlightedEnd = false;
 var highlightedEvent;
+var dragLine = false;
 var dateSet;
 var startDate;
 var endDate;
@@ -104,6 +105,9 @@ function initialize(id=null) {
 	// as well as determining whether the mouse is hovering above a event-connecting line.
 	canvas.addEventListener("mousemove", function(e) {
 		var pos = getMousePos(e.x, e.y);
+		let contentDiv = $("#content-div").get(0);
+		let changeCursor = false;
+		let draggableEvent = null;
 		for(i = 0; i < events.length; i++) {
 			let event = events[i];
 			let midX = getCoordFromDate(event.date);
@@ -116,14 +120,29 @@ function initialize(id=null) {
 					else highlightedEvent = null;
 				}
 				else {
-					if (event.div.offsetTop < midY) {
-						
-					}
-					else {
-
+					let eventY = event.div.offsetTop;
+					if ((eventY < midY && pos.y > eventY+event.div.offsetHeight+10 && pos.y < midY) || (eventY > midY && pos.y < eventY-10 && pos.y > midY)) {
+						contentDiv.style.cursor = "e-resize";
+						changeCursor = true;
+						draggableEvent = event;
+						break;
 					}
 				}
 			}
+		}
+		if (!changeCursor) {
+			// Cursor is not over a connecting line, change cursor to default.
+			contentDiv.style.cursor = "auto";
+			if (dragLine) {
+				// We were able to drag previously, set this to false.
+				document.onmousedown = null;
+				dragLine = false;
+			}
+		}
+		else if (!dragLine) {
+			// We should now be able to drag, but weren't previously. Enable dragging.
+			document.onmousedown = function(e) { lineDragStarted(draggableEvent, e); }
+			dragLine = true;
 		}
 	});
 	canvas.addEventListener("mousemove", function(e) {
@@ -186,7 +205,7 @@ function initialize(id=null) {
 			highlightedEnd = false;
 		}
 	});
-	canvas.addEventListener("click", function(e) {
+	canvas.addEventListener("mousedown", function(e) {
 		if(highlightedEvent != null) {
 			setEventMinimized(highlightedEvent, false);
 		}
@@ -333,9 +352,7 @@ function loadFromDB(id) {
 							var jsonMsg = JSON.parse(this.responseText);
 							
 							for(i = 0; i < jsonMsg.length; i++) {
-								var xoffset = canvas.getBoundingClientRect().left;
-
-								var event = createEvent(jsonMsg[i][5], canvas.height*(jsonMsg[i][6]/100), new Date(getDeformattedDateString(jsonMsg[i][2])));
+								var event = createEvent(endX * jsonMsg[i][5], canvas.height * jsonMsg[i][6], new Date(getDeformattedDateString(jsonMsg[i][2])));
 
 								event.isCompleted = jsonMsg[i][3] == 1;
 								createEventDiv(event.xPos, event.yPos, event);
@@ -578,8 +595,9 @@ function createEventDiv(x, y, event) {
 	if(!checkAxisConformity(inputDiv, x, divY,  "up")) divY = 0;
 	else if(!checkAxisConformity(inputDiv, x, divY,  "down")) divY = (canvas.height) - inputDiv.offsetHeight;
 
-	let xCoord = event.date == null ? x : getCoordFromDate(date);
-	inputDiv.style.left = (xCoord - (inputDiv.offsetWidth/2)) + "px";
+	let divX = x - (inputDiv.offsetWidth/2);
+
+	inputDiv.style.left = divX + "px";
 	inputDiv.style.top = divY + "px";
 
 	if (event.date == null) event.date = getDateFromCoord(x);
@@ -590,7 +608,7 @@ function createEventDiv(x, y, event) {
 function setEventMinimized(event, isMini) {
 	if(isMini) {
 		event.minimizedIcon = {
-			x: getMidPoint(event).x,
+			x: getCoordFromDate(event.date),
 			oldY: event.div.offsetTop + event.div.offsetHeight/2,
 			d: 7,
 			color: event.div.style.borderColor !== "black" ? event.div.style.borderColor : "rgb(0, 0, 255)",
@@ -619,8 +637,12 @@ function setEventMinimized(event, isMini) {
 	refresh();
 }
 
+function getXPct(x) {
+	return x/endX;
+}
+
 function getYPct(y) {
-	return (y/this.canvas.height)*100;
+	return y/this.canvas.height;
 }
 
 function divDragStarted(event, e) {
@@ -680,6 +702,7 @@ function onLineDragEvent(event, e) {
 	eraseAll();
 
 	event.date = getDateFromCoord(newX);
+	event.header.textContent = getFormattedDateString(event.date);
 
 	drawTimeline();
 }
@@ -777,10 +800,12 @@ function clearAll() {
 		document.getElementById("canvas_div").removeChild(events[i].div);
 	}
 	highlightedEvent = null;
+	dragLine = false;
 	startDate = null;
 	endDate = null;
 	events = new Array();
 	document.getElementById("input-id").value = "";
+	document.onmousedown = null;
 	hideHelperText();
 }
 
@@ -882,7 +907,7 @@ function saveChangesToDB() {
 				statuses[i] = events[i].status;
 				minimizes[i] = events[i].minimizedIcon !== null ? 1 : 0;
 				let pos = getMidPoint(events[i]);
-				xcoords[i] = pos.x;
+				xcoords[i] = getXPct(pos.x);
 				ycoords[i] = getYPct(pos.y);
 			}
 
