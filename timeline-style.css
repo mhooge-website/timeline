@@ -7,7 +7,6 @@
 #content-div {
 	width: 95%;
 	position: relative;
-	padding: 5px;
 	overflow: hidden;
 	margin: auto;
 	margin-bottom: 10px;
@@ -31,6 +30,8 @@
 }
 
 #option-bar {
+	padding: 5px;
+	background-color: rgba(0, 0, 0, 0.85);
 	text-align: right;
 }
 
@@ -51,7 +52,27 @@
 	width: 100%;
 	text-align: center;
 	border: none;
+	background-color: inherit;
+	color: rgb(240, 240, 240);
 	font-size: 30px;
+}
+
+#blur-wrapper {
+	display: none;
+	position: absolute;
+	opacity: 0;
+	top: 0px;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0);
+
+	animation-name: blur;
+	animation-duration: 0.7s;
+	animation-fill-mode: both;
+	animation-direction: alternate;
+	animation-iteration-count: infinite;
+	animation-play-state: paused;
 }
 
 @keyframes fade-in-animation {
@@ -93,6 +114,15 @@
 	}
 }
 
+@keyframes blur {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0.8;
+	}
+}
+
 #settings-div {
 	position: absolute;
 	display: none;
@@ -106,7 +136,7 @@
 	height: 260px;
 	width: 275px;
 	animation-duration: 0.4s;
-	z-index: 2;
+	z-index: 3;
 }
 
 #settings-div > div {
@@ -168,7 +198,7 @@
 	left: 0; right: 0;
 	margin: 0 auto 0 auto;
 	bottom: 0;
-	z-index: 2;
+	z-index: 3;
 
 	animation-name: popup-animation;
 	animation-duration: 0.6s;
@@ -265,7 +295,7 @@
 	display: none;
 	position: absolute;
 	height: 120px;
-	z-index: 3;
+	z-index: 4;
 }
 
 #startup-div, #modal-load-div {
@@ -313,7 +343,7 @@
 	margin: auto;
 	width: 250px;
 	height: 200px;
-	z-index: 2;
+	z-index: 3;
 }
 .modal-content {
 	width: 80%;

@@ -810,17 +810,18 @@ function clearAll() {
 }
 
 function showSetupMenu() {
-	closeSettingsWindow();
-	clearAll();
-	document.getElementById("content-div").style.display = "none";
-	document.getElementById("startup-div").style.display = "block";
+	window.location.href = getBaseURL();
+}
+
+function getBaseURL() {
+	let index = window.location.href.lastIndexOf("timeline");
+	return window.location.href.substring(0, index) + "timeline";
 }
 
 function getTimelineURL() {
-	let index = window.location.href.lastIndexOf("timeline");
-	let baseLoc = window.location.href.substring(0, index) + "timeline/";
+	let baseLoc = getBaseURL();
 
-	return baseLoc+timelineId;
+	return baseLoc+"/"+timelineId;
 }
 
 function openSaveModal() {
@@ -841,16 +842,20 @@ function openSettingsWindow() {
 	settings.style.display = "inline-block";
 	settings.style.animationFillMode = "none";
 	settings.style.animationName = "fade-in-animation";
+
+	blurBackground(true);
 }
 
 function animateCloseSettingsWindow() {
 	var settings = document.getElementById("settings-div");
 	settings.style.animationFillMode = "forwards";
 	settings.style.animationName = "zoom-out";
+	blurBackground(false);
 }
 
 function closeSettingsWindow() {
 	document.getElementById("settings-div").style.display = "none";
+	blurBackground(false);
 }
 
 function downloadCanvas(link, fileName) {
@@ -980,6 +985,22 @@ function showLoadInput() {
 
 function hideLoadInput() {
 	document.getElementById("modal-load-div").style.display = "none";
+}
+
+function blurBackground(blur) {
+	let div = $("#blur-wrapper").get(0);
+	let display = blur ? "block" : "none";
+	if (blur) {
+		div.style.display = "block";
+		div.style.animationPlayState = "running";
+	}
+	else {
+		div.style.animationPlayState = "running";
+	}
+	setTimeout(() => {
+		div.style.animationPlayState = "paused";
+		div.style.display = display;
+	}, 700);
 }
 
 function loadNewTimeline() {

@@ -117,6 +117,8 @@
 			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
 		</div>
 	</div>
+
+	<div id="blur-wrapper"></div>
 </body>
 </html>
 
