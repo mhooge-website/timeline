@@ -113,7 +113,8 @@
 				<span>How I timeline?</span>
 				<button id="close-guide-btn" class="btn btn-primary" onclick="animateCloseGuideWindow();">&times;</button>
 				<br><br>
-				- Click either ends of the timeline to change start/end date.
+				Click either ends of the timeline to change start/end date.
+
 				<br><br>
 				- When start & end date is set, click anywhere on the timeline to add an event at that date.
 				<br><br>

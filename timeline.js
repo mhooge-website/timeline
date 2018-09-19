@@ -91,12 +91,12 @@ function initialize(id=null) {
 		if(scroll > 0) zoomIn(scroll/100);
 		else zoomOut(-scroll/100);
 	}); */
+	var contentDiv = $("#content-div").get(0);
 	window.addEventListener("resize", function(e) { onResized(); });
 	// Add listener for determining whether the mouse is hovering above a minimized event,
 	// as well as determining whether the mouse is hovering above a event-connecting line.
 	canvas.addEventListener("mousemove", function(e) {
 		var pos = getMousePos(e.x, e.y);
-		let contentDiv = $("#content-div").get(0);
 		let changeCursor = false;
 		let draggableEvent = null;
 		for(i = 0; i < events.length; i++) {
@@ -174,25 +174,32 @@ function initialize(id=null) {
 	});
 	canvas.addEventListener("mousemove", function(e) {
 		var pos = getMousePos(e.clientX, e.clientY);
-		if(pos.x > startX - 8 && pos.x < startX + 8
-				&& pos.y > midY - dateTickHeight - 5 && pos.y < midY + dateTickHeight + 5) {
+		let onStartLine = pos.y < midY + dateTickHeight + 5 && pos.y > midY - dateTickHeight - 5 && pos.x > startX - 8 && pos.x < startX + 8;
+		let onText = pos.y < midY-20 && pos.y > midY - 50 && pos.x > startX - 45 && pos.x < startX + 60;
+		if(onStartLine || onText) {
 			drawStartDateTick("rgb(255, 0, 0)");
+			contentDiv.style.cursor = "pointer";
 			highlightedStart = true;
 		}
 		else if(highlightedStart) {
 			drawStartDateTick("rgb(0, 0, 0)");
+			contentDiv.style.cursor = "auto";
 			highlightedStart = false;
 		}
+		
 	});
 	canvas.addEventListener("mousemove", function(e) {
 		var pos = getMousePos(e.clientX, e.clientY);
-		if(pos.x > endX - 8 && pos.x < endX + 8
-				&& pos.y > midY - dateTickHeight - 5 && pos.y < midY + dateTickHeight + 5) {
+		let onEndLine = pos.y < midY + dateTickHeight + 5 && pos.y > midY - dateTickHeight - 5 && pos.x > endX - 8 && pos.x < endX + 8;
+		let onText = pos.y < midY-20 && pos.y > midY - 50 && pos.x > endX - 70 && pos.x < endX + 25;
+		if(onEndLine || onText) {
 			drawEndDateTick("rgb(255, 0, 0)");
+			contentDiv.style.cursor = "pointer";
 			highlightedEnd = true;
 		}
 		else if(highlightedEnd) {
 			drawEndDateTick("rgb(0, 0, 0)");
+			contentDiv.style.cursor = "auto";
 			highlightedEnd = false;
 		}
 	});
