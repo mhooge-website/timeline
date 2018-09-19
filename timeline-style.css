@@ -75,6 +75,29 @@
 	animation-play-state: paused;
 }
 
+#guide-div {
+	display: none;
+	position: absolute;
+	margin: auto;
+	left: 0; right: 0; top: 0; bottom: 0;
+	z-index: 3;
+	width: 800px;
+	height: 500px;
+
+	color: white;
+	background-color: rgb(77, 78, 85);
+	border-style: solid;
+	animation-duration: 0.4s;
+}
+
+#guide-div > span {
+	font-size: 30px;
+}
+
+#close-guide-btn {
+	float: right;
+}
+
 @keyframes fade-in-animation {
 	0% {
 		transform: translateY(-50%);
@@ -215,12 +238,14 @@
 	background-color: #2571c7;
 	position: absolute;
 	max-width: 420px;
-}
 
-#helper-div > p {
 	text-align: center;
 	font-size: 22px;
 	color: #ffffff;
+}
+
+#helper-div > button {
+	float: right;
 }
 
 #event-error {

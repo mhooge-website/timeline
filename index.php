@@ -11,6 +11,7 @@
 		gtag('config', 'UA-112742388-1');
 	</script>
 
+	<title>Timeline</title>
 	<link rel="stylesheet" type="text/css" href="/global-style.css">
 	<script src="/projects/timeline/timeline.js"></script>
 	<script> 
@@ -51,7 +52,7 @@
 				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">
 					<img src="/projects/timeline/icons/trash.png" width="25" height="25" alt="Reset" class="icon-img" />
 				</button>
-				<button id="help-button" class="btn btn-primary">
+				<button id="help-button" onclick="openGuideWindow();" class="btn btn-primary">
 					<img src="/projects/timeline/icons/questionmark.png" width="25" height="25" alt="Help" class="icon-img" />
 				</button>
 			</div>
@@ -71,7 +72,9 @@
 			</div>
 		</div>
 		<div id="helper-div" class="popup-div">
-			<p>Welcome! <br>
+			<span>Welcome!</span>
+			<button class="btn btn-danger" onclick="animateHideHelperText();">&times;</button>
+			<p>	
 				To get started, click on either ends of <br>
 				the timeline to select a start/end date.
 			</p>
@@ -85,6 +88,7 @@
 		</div>
 		<div id="canvas_div">
 			<canvas id="canvas" width="1100" height="600"></canvas>
+			
 			<div id="settings-div">
 				<span id="settings-header">Settings</span>
 				<button id="close-settings-btn" class="btn btn-primary" onclick="animateCloseSettingsWindow();">&times;</button>
@@ -103,6 +107,25 @@
 				<button id="modal-load-timeline-button" class="btn btn-primary" 
 				onclick="triggerButtonCooldown('modal-load-timeline-button'); loadNewTimeline();">Load</button>
 				<label id="modal-input-err-label" class="input-error-label" for="input-id"></label>
+			</div>
+
+			<div id="guide-div">
+				<span>How I timeline?</span>
+				<button id="close-guide-btn" class="btn btn-primary" onclick="animateCloseGuideWindow();">&times;</button>
+				<br><br>
+				- Click either ends of the timeline to change start/end date.
+				<br><br>
+				- When start & end date is set, click anywhere on the timeline to add an event at that date.
+				<br><br>
+				- Minimize/maximize events.
+				<br><br>
+				- Delete events
+				<br><br>
+				- Drag events around.
+				<br><br>
+				- Change date of event by dragging it's connecting line.
+				<br><br>
+				- Save your timeline, this generates a unique ID, so you can access your timeline later. Write the ID down!
 			</div>
 		</div>
 	</div>

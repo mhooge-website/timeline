@@ -1,1 +1,1 @@
-ErrorDocument 404 "please"
+ErrorDocument 404 /projects/timeline/index.php

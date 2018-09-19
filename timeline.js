@@ -342,6 +342,7 @@ function loadFromDB(id) {
 				dateSet = "end";
 				setDate(responseArr[1]);
 				document.getElementById("timeline-name").value = responseArr[2];
+				setPageTitle();
 
 				drawTimeline();
 
@@ -858,6 +859,21 @@ function closeSettingsWindow() {
 	blurBackground(false);
 }
 
+function animateCloseGuideWindow() {
+	var guide = $("#guide-div").get(0);
+	guide.style.animationFillMode = "forwards";
+	guide.style.animationName = "zoom-out";
+	blurBackground(false);
+}
+
+function openGuideWindow() {
+	let guide = $("#guide-div").get(0);
+	guide.style.display = "block";
+	guide.style.animationFillMode = "none";
+	guide.style.animationName = "fade-in-animation";
+	blurBackground(true);
+}
+
 function downloadCanvas(link, fileName) {
 	link.href = canvas.toDataURL();
     link.download = fileName;
@@ -870,6 +886,14 @@ function checkEventIsEmpty(event) {
 		return true;
 	}
 	return false;
+}
+
+function setPageTitle() {
+	let nameInput = $("#timeline-name").get(0);
+	let title = "Timeline - " + nameInput.value;
+	if (document.title != title) {
+		document.title = title;
+	}
 }
 
 function saveTimeline() {
@@ -947,6 +971,7 @@ function saveChangesToDB() {
 			if(id == null) {
 				openSaveModal();
 			}
+			setPageTitle();
 		}
 	};
 	
@@ -1031,8 +1056,8 @@ function setDateFromModal() {
 	setDate(document.getElementById("dateForm").value);
 }
 
-function alertInvalidDate() {
-	alert("Invalid Date!");
+function alertInvalidDate(error="Invalid Date.") {
+	alert(error);
 }
 
 function setDate(dateString) {
@@ -1048,10 +1073,18 @@ function setDate(dateString) {
 	}
 	
 	if(dateSet == "start") {
+		if (isStartAndEndDateSet() && date.getTime() > endDate.getTime()) {
+			alertInvalidDate("Error: Start date must be earlier than end date.");
+			return;
+		}
 		startDate = date;
 		drawStartDate();
 	}
 	else {
+		if (isStartAndEndDateSet() && date.getTime() < startDate.getTime()) {
+			alertInvalidDate("Error: End date must be later than start date.");
+			return;
+		}
 		endDate = date;
 		drawEndDate();
 	}
