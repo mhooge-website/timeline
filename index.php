@@ -119,7 +119,7 @@
 				<br><br>
 				- Minimize/maximize events.
 				<br><br>
-				- Delete events
+				- Delete events.
 				<br><br>
 				- Drag events around.
 				<br><br>
@@ -135,7 +135,7 @@
 			<button class="modal-buttons" onclick="closeModal();">&times;</button>
 			<div>
 				Input a Date:
-				<input type="date" name="date" id="dateForm">
+				<input type="date" name="date" id="dateForm" min="2000-01-01">
 			</div>
 			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
 		</div>
@@ -156,8 +156,8 @@
 	else if($last_element != "timeline" && $last_element != "") {
 		$id = $last_element;
 	}
-		
+	
 	if ($id != null) {
-		echo "<script type='text/javascript'>initialize('$id');</script>";
+		echo "<script type='text/javascript'>loadTimeline('$id');</script>";
 	}
 ?>

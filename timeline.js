@@ -85,15 +85,6 @@ function initialize(id=null) {
 	
 	ctx.font = "20px serif";
 
-	setTimeout(() => {
-		calculateCanvasVariables();
-		if(id != null) loadFromDB(id);
-		else {
-			calculateTickCoords();
-			drawTimeline();
-		}
-	}, 200);
-	
 	/*
 	window.addEventListener("wheel", function(e) {
 		let scroll = e.deltaY;
@@ -233,10 +224,18 @@ function initialize(id=null) {
 		setDate(getISODateString(now));
 		now.setTime(now.getTime() + (1000*60*60*24*2));
 		dateSet = "end";
-		setDate(getISODateString(now))
+		setDate(getISODateString(now));
+		document.getElementById("timeline-name").value = "My Timeline";
+		setTimelineDimensions();
 	}
+}
 
-	document.getElementById("timeline-name").value = "My Timeline";
+function setTimelineDimensions() {
+	calculateCanvasVariables();
+	
+	calculateTickCoords();
+	calculateProgress();
+	drawTimeline();
 }
 
 function onResized() {
@@ -311,15 +310,19 @@ function checkInputValidity(givenId) {
 		return false;
 	}
 	else if(givenId.length != 32) {
-		displayLoadError("Incorrect length, must be 32 characters.");
+		displayLoadError("Incorrect ID length, must be 32 characters.");
 		return false;
 	}
 	return true;
 }
 
-function loadTimeline() {
-	var id = document.getElementById("input-id").value;
-	if(!checkInputValidity(id)) return;
+function loadTimeline(timeId=null) {
+	let inputField = $("#input-id").get(0);
+	var id = timeId == null ? inputField.value : timeId;
+	if(!checkInputValidity(id)) {
+		if (timeId != null) inputField.value = id
+		return;
+	}
 	loadFromDB(id);
 }
 
@@ -332,6 +335,8 @@ function loadFromDB(id) {
 				return;
 			}
 			else {
+				initialize(id);
+
 				hideHelperText();
 
 				var responseArr = JSON.parse(this.responseText)[0];
@@ -344,29 +349,20 @@ function loadFromDB(id) {
 				document.getElementById("timeline-name").value = responseArr[2];
 				setPageTitle();
 
-				drawTimeline();
-
 				eventsHttp = new XMLHttpRequest();
 				eventsHttp.onreadystatechange = function(e) {
 					if (this.readyState == 4 && this.status == 200) {
 						if(this.responseText != "empty") {
 							var jsonMsg = JSON.parse(this.responseText);
-							
-							for(i = 0; i < jsonMsg.length; i++) {
-								var event = createEvent(endX * jsonMsg[i][5], canvas.height * jsonMsg[i][6], new Date(getDeformattedDateString(jsonMsg[i][2])));
 
-								event.isCompleted = jsonMsg[i][3] == 1;
-								createEventDiv(event.xPos, event.yPos, event);
-								event.header.textContent = jsonMsg[i][2];
-								event.txt.value = jsonMsg[i][1];
-								event.id = jsonMsg[i][0];
-								setEventMinimized(event, jsonMsg[i][4] == 1);
-								event.status = "ajour";
-								
-								events.push(event);
+							if (document.readyState == "complete") addEventsFromDB(jsonMsg);
+							else {
+								document.onreadystatechange = () => {
+									if (document.readyState == "complete") addEventsFromDB(jsonMsg);
+								};
 							}
 						}
-						drawTimeline();
+						
 					}
 				}
 				eventsHttp.open("GET", "/projects/timeline/load_events.php?id=" + id);
@@ -380,6 +376,25 @@ function loadFromDB(id) {
 	};
 	timelineHttp.open("GET", "/projects/timeline/load_timeline.php?id=" + id, true);
 	timelineHttp.send();
+}
+
+function addEventsFromDB(jsonMsg) {
+	setTimelineDimensions();
+
+	for(i = 0; i < jsonMsg.length; i++) {
+		var event = createEvent(endX * jsonMsg[i][5], canvas.height * jsonMsg[i][6], new Date(getDeformattedDateString(jsonMsg[i][2])));
+
+		event.isCompleted = jsonMsg[i][3] == 1;
+		createEventDiv(event.xPos, event.yPos, event);
+		event.header.textContent = jsonMsg[i][2];
+		event.txt.value = jsonMsg[i][1];
+		event.id = jsonMsg[i][0];
+		setEventMinimized(event, jsonMsg[i][4] == 1);
+		event.status = "ajour";
+		
+		events.push(event);
+	}
+	drawTimeline();
 }
 
 function getMousePos(xPos, yPos) {
