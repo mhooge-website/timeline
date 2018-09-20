@@ -81,13 +81,8 @@
 	margin: auto;
 	left: 0; right: 0; top: 0; bottom: 0;
 	z-index: 3;
-	width: 800px;
-	height: 500px;
-
-	color: white;
-	background-color: rgb(77, 78, 85);
-	border-style: solid;
-	animation-duration: 0.4s;
+	width: 1400px;
+	height: 400px;
 }
 
 #guide-div > span {
@@ -96,6 +91,37 @@
 
 #close-guide-btn {
 	float: right;
+}
+
+#guide-content {
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	margin: auto;
+	left: 0; right: 0; top: 0; bottom: 0;
+	height: 400;
+}
+
+#guide-content > div {
+	position: relative;
+	width: 250px;
+	color: white;
+	background-color: rgb(77, 78, 85);
+	border-style: solid;
+	animation-duration: 0.4s;
+	text-align: center;
+	padding: 5px;
+}
+
+#guide-content > div:not(:first-child) {
+    margin-left: 20px;
+}
+
+#guide-content > div > img {
+	margin: auto;
+	position: relative;
+	left: 0; right: 0;
+	width: 90%;
 }
 
 @keyframes fade-in-animation {

@@ -365,7 +365,10 @@ function loadFromDB(id) {
 							if (document.readyState == "complete") addEventsFromDB(jsonMsg);
 							else {
 								document.onreadystatechange = () => {
-									if (document.readyState == "complete") addEventsFromDB(jsonMsg);
+									if (document.readyState == "complete") {
+										// Wait a bit cause 'readyState' is a filthy liar and is not actually ready. 
+										setTimeout(() => addEventsFromDB(jsonMsg), 50);
+									} 
 								};
 							}
 						}

@@ -112,21 +112,27 @@
 			<div id="guide-div">
 				<span>How I timeline?</span>
 				<button id="close-guide-btn" class="btn btn-primary" onclick="animateCloseGuideWindow();">&times;</button>
-				<br><br>
-				Click either ends of the timeline to change start/end date.
-
-				<br><br>
-				- When start & end date is set, click anywhere on the timeline to add an event at that date.
-				<br><br>
-				- Minimize/maximize events.
-				<br><br>
-				- Delete events.
-				<br><br>
-				- Drag events around.
-				<br><br>
-				- Change date of event by dragging it's connecting line.
-				<br><br>
-				- Save your timeline, this generates a unique ID, so you can access your timeline later. Write the ID down!
+				<div id="guide-content">
+					<div>
+						<p>Click either ends of the timeline to change start/end date.</p>
+						<img src="/projects/timeline/guide_images/guide1.png" alt="Rip"/>
+					</div>
+					<div>
+						<p>When start & end date is set, click anywhere on the timeline to add an event at that date.</p>
+					</div>
+					<div>
+						<p>Delete events.</p>
+					</div>
+					<div>
+						<p>Drag events around.</p>
+					</div>
+					<div>
+						<p>Change date of event by dragging it's connecting line.</p>
+					</div>
+					<div>
+						<p>Save your timeline, this generates a unique ID, so you can access your timeline later. Write the ID down!</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
