@@ -21,7 +21,7 @@ var endDate;
 var canvas;
 var ctx;
 var ticks;
-var timelineProgress;
+var timelineProgress = 0.0;
 var progressLength;
 var events;
 var point = {
@@ -237,12 +237,27 @@ function initialize(id=null) {
 	}
 }
 
-function setTimelineDimensions() {
-	calculateCanvasVariables();
+function setTimelineDimensions(actionAfter=null) {
+	let dimensionCalls = function() {
+		calculateCanvasVariables();
 	
-	calculateTickCoords();
-	calculateProgress();
-	drawTimeline();
+		calculateTickCoords();
+		calculateProgress();
+		drawTimeline();
+
+		if (actionAfter != null) {
+			actionAfter();
+		}
+	}
+	if (document.readyState == "complete") dimensionCalls();
+	else {
+		document.onreadystatechange = () => {
+			if (document.readyState == "complete") {
+				// Wait a bit cause 'readyState' is a filthy liar and is not actually ready. 
+				setTimeout(() => dimensionCalls(), 50);
+			} 
+		};
+	}
 }
 
 function onResized() {
@@ -362,17 +377,9 @@ function loadFromDB(id) {
 						if(this.responseText != "empty") {
 							var jsonMsg = JSON.parse(this.responseText);
 
-							if (document.readyState == "complete") addEventsFromDB(jsonMsg);
-							else {
-								document.onreadystatechange = () => {
-									if (document.readyState == "complete") {
-										// Wait a bit cause 'readyState' is a filthy liar and is not actually ready. 
-										setTimeout(() => addEventsFromDB(jsonMsg), 50);
-									} 
-								};
-							}
+							setTimelineDimensions(() => addEventsFromDB(jsonMsg));
 						}
-						
+						else setTimelineDimensions();
 					}
 				}
 				eventsHttp.open("GET", "/projects/timeline/load_events.php?id=" + id);
@@ -389,8 +396,6 @@ function loadFromDB(id) {
 }
 
 function addEventsFromDB(jsonMsg) {
-	setTimelineDimensions();
-
 	for(i = 0; i < jsonMsg.length; i++) {
 		var event = createEvent(endX * jsonMsg[i][5], canvas.height * jsonMsg[i][6], new Date(getDeformattedDateString(jsonMsg[i][2])));
 
@@ -457,15 +462,23 @@ function animateHideHelperText() {
 
 function showDateModal() {
 	let input = document.getElementById("dateForm");
-	if(startDate != null) {
-		let startISO = getISODateString(startDate);
-		if(dateSet == "start") input.value = startISO;
-		else input.min = startISO;
+	input.min = "2000-01-01";
+	input.max = "2050-01-01";
+	let currentDate = new Date();
+	if (dateSet == "start") {
+		if (startDate != null) {
+			let startISO = getISODateString(startDate);
+			input.value = startISO;
+		}
+		input.max = getISODateString(currentDate);
 	}
-	else if(endDate != null) {
-		let endISO = getISODateString(endDate);
-		if(dateSet == "end") input.value = endISO;
-		else input.max = endISO;
+	else {
+		if(endDate != null) {
+			let endISO = getISODateString(endDate);
+			input.value = endISO;
+		}
+		let minDate = new Date(getMillisFromDay(getDayFromMillis(currentDate.getTime()) + 1));
+		input.min = getISODateString(minDate);
 	}
 	
 	document.getElementById("dateModal").style.display = "block";
@@ -530,7 +543,7 @@ function createEvent(x, y, date=null) {
 		},
 		checkDeadlineSeverity: function() {
 			if(this.isCompleted) return;
-			if(getDayFromMillis(getDateFromCoord(getMidPoint(this).x).getTime()) < getDayFromMillis(new Date().getTime()) + 3) {
+			if(getDayFromMillis(this.date.getTime()) < getDayFromMillis(new Date().getTime()) + 3) {
 				this.div.style.borderColor = "red";
 			}
 			else this.setCompleted(false);
@@ -729,6 +742,7 @@ function onLineDragEvent(event, e) {
 
 	event.date = getDateFromCoord(newX);
 	event.header.textContent = getFormattedDateString(event.date);
+	event.checkDeadlineSeverity();
 
 	drawTimeline();
 }
@@ -1096,18 +1110,19 @@ function setDate(dateString) {
 		alertInvalidDate();
 		return;
 	}
-	
+
+	let currentDate = new Date();
 	if(dateSet == "start") {
-		if (isStartAndEndDateSet() && date.getTime() > endDate.getTime()) {
-			alertInvalidDate("Error: Start date must be earlier than end date.");
+		if (isStartAndEndDateSet() && date.getTime() > currentDate.getTime()) {
+			alertInvalidDate("Error: Start date must be earlier than, or equal to, current date.");
 			return;
 		}
 		startDate = date;
 		drawStartDate();
 	}
 	else {
-		if (isStartAndEndDateSet() && date.getTime() < startDate.getTime()) {
-			alertInvalidDate("Error: End date must be later than start date.");
+		if (isStartAndEndDateSet() && date.getTime() < currentDate.getTime()) {
+			alertInvalidDate("Error: End date must be later than current date.");
 			return;
 		}
 		endDate = date;
@@ -1167,6 +1182,10 @@ function getDayFromMillis(millis) {
 	return millis/1000/60/60/24;
 }
 
+function getMillisFromDay(day) {
+	return day*1000*60*60*24;
+}
+
 function getDateFromCoord(xCoord) {
 	var milliDiff = endDate.getTime() - startDate.getTime();
 	var ratio = (xCoord - startX) / (endX - startX);
@@ -1210,13 +1229,14 @@ function calculateProgress() {
 	var startInMillis = startDate.getTime();
 	var endInMillis = endDate.getTime();
 	var currentInMillis = new Date().getTime();
-	
+
 	var diffEndStart = endInMillis - startInMillis;
 	currentInMillis -= startInMillis;
 	
 	timeLineProgress = currentInMillis/diffEndStart;
 	
 	progressLength = (endX - startX)*timeLineProgress;
+
 }
 
 function drawProgressBar() {

@@ -112,26 +112,23 @@
 			<div id="guide-div">
 				<span>How I timeline?</span>
 				<button id="close-guide-btn" class="btn btn-primary" onclick="animateCloseGuideWindow();">&times;</button>
-				<div id="guide-content">
-					<div>
-						<p>Click either ends of the timeline to change start/end date.</p>
-						<img src="/projects/timeline/guide_images/guide1.png" alt="Rip"/>
-					</div>
-					<div>
-						<p>When start & end date is set, click anywhere on the timeline to add an event at that date.</p>
-					</div>
-					<div>
-						<p>Delete events.</p>
-					</div>
-					<div>
-						<p>Drag events around.</p>
-					</div>
-					<div>
-						<p>Change date of event by dragging it's connecting line.</p>
-					</div>
-					<div>
-						<p>Save your timeline, this generates a unique ID, so you can access your timeline later. Write the ID down!</p>
-					</div>
+
+				<div id="guide-img" class="guide-content">
+					<div><img src="/projects/timeline/guide_images/guide1.png" alt="Rip"/></div>
+					<div><img src="/projects/timeline/guide_images/guide2.png" alt="Rip"/></div>
+					<div><img src="/projects/timeline/guide_images/guide3.png" alt="Rip"/></div>
+					<div><img src="/projects/timeline/guide_images/guide4.png" alt="Rip"/></div>
+					<div><img src="/projects/timeline/guide_images/guide5.png" alt="Rip"/></div>
+					<div><img src="/projects/timeline/guide_images/guide6.png" alt="Rip"/></div>
+				</div>
+
+				<div id="guide-desc" class="guide-content">
+					<div>Click either ends of the timeline to change start/end date.</div>
+					<div>When start & end date is set, click anywhere on the timeline to add an event at that date.</div>
+					<div>Delete events.</div>
+					<div>Drag events around.</div>
+					<div>Change date of event by dragging it's connecting line.</div>
+					<div>Save your timeline. This generates a unique link, so you can access your timeline later. Save the link :)</div>
 				</div>
 			</div>
 		</div>
@@ -142,7 +139,7 @@
 			<button class="modal-buttons" onclick="closeModal();">&times;</button>
 			<div>
 				Input a Date:
-				<input type="date" name="date" id="dateForm" min="2000-01-01">
+				<input type="date" name="date" id="dateForm">
 			</div>
 			<button class="modal-buttons" onclick="setDateFromModal(); closeModal();">OK</button>
 		</div>

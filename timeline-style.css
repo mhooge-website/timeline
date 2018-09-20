@@ -79,10 +79,17 @@
 	display: none;
 	position: absolute;
 	margin: auto;
+	padding: 10px;
 	left: 0; right: 0; top: 0; bottom: 0;
 	z-index: 3;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.6);
+	text-align: center;
+
+	animation-duration: 0.5s;
+
 	width: 1400px;
-	height: 400px;
+	height: 360px;
 }
 
 #guide-div > span {
@@ -93,7 +100,7 @@
 	float: right;
 }
 
-#guide-content {
+.guide-content {
 	display: flex;
 	flex-direction: row;
 	position: relative;
@@ -102,26 +109,32 @@
 	height: 400;
 }
 
-#guide-content > div {
+.guide-content > div {
 	position: relative;
 	width: 250px;
-	color: white;
-	background-color: rgb(77, 78, 85);
-	border-style: solid;
+	
 	animation-duration: 0.4s;
 	text-align: center;
 	padding: 5px;
 }
 
-#guide-content > div:not(:first-child) {
+.guide-content > div:not(:first-child) {
     margin-left: 20px;
 }
 
-#guide-content > div > img {
+#guide-img {
+	margin-top: 15px;
+}
+
+#guide-img > div > img {
 	margin: auto;
 	position: relative;
 	left: 0; right: 0;
 	width: 90%;
+
+	border-style: solid;
+	border-color: red;
+	border-width: 1px;
 }
 
 @keyframes fade-in-animation {
