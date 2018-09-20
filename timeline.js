@@ -397,7 +397,9 @@ function loadFromDB(id) {
 
 function addEventsFromDB(jsonMsg) {
 	for(i = 0; i < jsonMsg.length; i++) {
-		var event = createEvent(endX * jsonMsg[i][5], canvas.height * jsonMsg[i][6], new Date(getDeformattedDateString(jsonMsg[i][2])));
+		console.log(jsonMsg[i][5]);
+		console.log(ratioXToCoord(jsonMsg[i][5]));
+		var event = createEvent(ratioXToCoord(jsonMsg[i][5]), ratioYToCoord(jsonMsg[i][6]), new Date(getDeformattedDateString(jsonMsg[i][2])));
 
 		event.isCompleted = jsonMsg[i][3] == 1;
 		createEventDiv(event.xPos, event.yPos, event);
@@ -676,12 +678,20 @@ function setEventMinimized(event, isMini) {
 	refresh();
 }
 
-function getXPct(x) {
-	return x/endX;
+function getXRatio(x) {
+	return (x - canvas.getBoundingClientRect().x) / (endX-startX);
 }
 
-function getYPct(y) {
-	return y/this.canvas.height;
+function getYRatio(y) {
+	return (y - canvas.getBoundingClientRect().y) / (this.canvas.height);
+}
+
+function ratioXToCoord(ratio) {
+	return canvas.getBoundingClientRect().x + (ratio*(endX-startX));
+}
+
+function ratioYToCoord(ratio) {
+	return canvas.getBoundingClientRect().y + (ratio*(canvas.height));
 }
 
 function divDragStarted(event, e) {
@@ -975,8 +985,8 @@ function saveChangesToDB() {
 				statuses[i] = events[i].status;
 				minimizes[i] = events[i].minimizedIcon !== null ? 1 : 0;
 				let pos = getMidPoint(events[i]);
-				xcoords[i] = getXPct(pos.x);
-				ycoords[i] = getYPct(pos.y);
+				xcoords[i] = getXRatio(pos.x);
+				ycoords[i] = getYRatio(pos.y);
 			}
 
 			var eventses = { "ids":ids, "timeline_id":timelineId, "descriptions":descriptions, "deadlines":deadlines, "completions":completions, 
