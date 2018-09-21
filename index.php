@@ -30,6 +30,7 @@
 	<link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css"/>
 	<script src="/bootstrap/js/jquery.min.js"></script>
 	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/node_modules/html2canvas/dist/html2canvas.min.js"></script>;
 
 	<div id="startup-div">
 		<div id="startup-input-div" class="form-group">
@@ -89,47 +90,50 @@
 		<div id="canvas_div">
 			<canvas id="canvas" width="1100" height="600"></canvas>
 			
-			<div id="settings-div">
-				<span id="settings-header">Settings</span>
-				<button id="close-settings-btn" class="btn btn-primary" onclick="animateCloseSettingsWindow();">&times;</button>
-				<div>
-					<p id="settings-id"></p>
-					<button class="btn btn-primary" onclick="showLoadInput();">Load Timeline</button>
-					<button class="btn btn-primary" onclick="newTimeline();">New Timeline</button>
-					<button class="btn btn-primary" onclick="showSetupMenu();">Go to Main Menu</button>
-				</div>
+			
+		</div>
+
+		<div id="settings-div">
+			<span id="settings-header">Settings</span>
+			<button id="close-settings-btn" class="btn btn-primary" onclick="animateCloseSettingsWindow();">&times;</button>
+			<div>
+				<p id="settings-id"></p>
+				<button class="btn btn-primary" onclick="showLoadInput();">Load Timeline</button>
+				<button class="btn btn-primary" onclick="newTimeline();">New Timeline</button>
+				<button id="dl-timeline-btn" class="btn btn-primary">Download Timeline</button>
+				<button class="btn btn-primary" onclick="showSetupMenu();">Go to Main Menu</button>
+			</div>
+		</div>
+
+		<div id="modal-load-div">
+			<label id="modal-load-header-label" for="modal-input-id">Load Timeline from ID</label>
+			<button class="btn btn-primary" onclick="hideLoadInput();">&times;</button>
+			<input class="form-control" id="modal-input-id" name="modal-input-id" type="text" placeholder="Timeline ID"/>
+			<button id="modal-load-timeline-button" class="btn btn-primary" 
+			onclick="triggerButtonCooldown('modal-load-timeline-button'); loadNewTimeline();">Load</button>
+			<label id="modal-input-err-label" class="input-error-label" for="input-id"></label>
+		</div>
+
+		<div id="guide-div">
+			<span>How I timeline?</span>
+			<button id="close-guide-btn" class="btn btn-primary" onclick="animateCloseGuideWindow();">&times;</button>
+
+			<div id="guide-img" class="guide-content">
+				<div><img src="/projects/timeline/guide_images/guide1.png" alt="Rip"/></div>
+				<div><img src="/projects/timeline/guide_images/guide2.png" alt="Rip"/></div>
+				<div><img src="/projects/timeline/guide_images/guide3.png" alt="Rip"/></div>
+				<div><img src="/projects/timeline/guide_images/guide4.png" alt="Rip"/></div>
+				<div><img src="/projects/timeline/guide_images/guide5.png" alt="Rip"/></div>
+				<div><img src="/projects/timeline/guide_images/guide6.png" alt="Rip"/></div>
 			</div>
 
-			<div id="modal-load-div">
-				<label id="modal-load-header-label" for="modal-input-id">Load Timeline from ID</label>
-				<button class="btn btn-primary" onclick="hideLoadInput();">&times;</button>
-				<input class="form-control" id="modal-input-id" name="modal-input-id" type="text" placeholder="Timeline ID"></input>
-				<button id="modal-load-timeline-button" class="btn btn-primary" 
-				onclick="triggerButtonCooldown('modal-load-timeline-button'); loadNewTimeline();">Load</button>
-				<label id="modal-input-err-label" class="input-error-label" for="input-id"></label>
-			</div>
-
-			<div id="guide-div">
-				<span>How I timeline?</span>
-				<button id="close-guide-btn" class="btn btn-primary" onclick="animateCloseGuideWindow();">&times;</button>
-
-				<div id="guide-img" class="guide-content">
-					<div><img src="/projects/timeline/guide_images/guide1.png" alt="Rip"/></div>
-					<div><img src="/projects/timeline/guide_images/guide2.png" alt="Rip"/></div>
-					<div><img src="/projects/timeline/guide_images/guide3.png" alt="Rip"/></div>
-					<div><img src="/projects/timeline/guide_images/guide4.png" alt="Rip"/></div>
-					<div><img src="/projects/timeline/guide_images/guide5.png" alt="Rip"/></div>
-					<div><img src="/projects/timeline/guide_images/guide6.png" alt="Rip"/></div>
-				</div>
-
-				<div id="guide-desc" class="guide-content">
-					<div>Click either ends of the timeline to change start/end date.</div>
-					<div>When start & end date is set, click anywhere on the timeline to add an event at that date.</div>
-					<div>Delete events.</div>
-					<div>Drag events around.</div>
-					<div>Change date of event by dragging it's connecting line.</div>
-					<div>Save your timeline. This generates a unique link, so you can access your timeline later. Save the link :)</div>
-				</div>
+			<div id="guide-desc" class="guide-content">
+				<div>Click either ends of the timeline to change start/end date.</div>
+				<div>When start & end date is set, click anywhere on the timeline to add an event at that date.</div>
+				<div>Delete events.</div>
+				<div>Drag events around.</div>
+				<div>Change date of event by dragging it's connecting line.</div>
+				<div>Save your timeline. This generates a unique link, so you can access your timeline later. Save the link :)</div>
 			</div>
 		</div>
 	</div>
@@ -146,6 +150,8 @@
 	</div>
 
 	<div id="blur-wrapper"></div>
+
+	<a id="dl-canvas" download="canvas.png"></a>
 </body>
 </html>
 

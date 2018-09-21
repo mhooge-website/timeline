@@ -23,6 +23,7 @@ var ctx;
 var ticks;
 var timelineProgress = 0.0;
 var progressLength;
+var windowSize;
 var events;
 var point = {
 	x: 0,
@@ -235,6 +236,7 @@ function initialize(id=null) {
 		document.getElementById("timeline-name").value = "My Timeline";
 		setTimelineDimensions();
 	}
+	$("#dl-timeline-btn").get(0).addEventListener("click", () => downloadCanvas($("#dl-canvas").get(0)), false);
 }
 
 /*
@@ -247,6 +249,8 @@ function initialize(id=null) {
 function setTimelineDimensions(actionAfter=null) {
 	let dimensionCalls = function() {
 		calculateCanvasVariables();
+
+		windowSize = { w: window.innerWidth, h : window.innerHeight };
 	
 		calculateTickCoords();
 		calculateProgress();
@@ -270,6 +274,7 @@ function setTimelineDimensions(actionAfter=null) {
 function onResized() {
 	calculateCanvasVariables();
 	calculateEventPositions();
+	windowSize = { w: window.innerWidth, h : window.innerHeight };
 	if(isStartAndEndDateSet()) {
 		calculateTickCoords();
 		calculateProgress();
@@ -299,9 +304,14 @@ function calculateCanvasVariables() {
 function calculateEventPositions() {
 	for(i = 0; i < events.length; i++) {
 		let event = events[i];
-		let xCoord = getCoordFromDate(event.date);
-		event.div.style.left = (xCoord - event.div.offsetWidth/2) + "px";
-		event.xPos = xCoord;
+		let ratioX = event.div.offsetLeft/windowSize.w;
+
+		let coordFromDate = getCoordFromDate(event.date);
+		let x = ratioX * window.innerWidth;
+		if (Math.abs(coordFromDate - x) < 5) x = coordFromDate;
+
+		event.div.style.left = x + "px";
+		event.xPos = x;
 
 		if(event.div.offsetTop < canvas.offsetTop) {
 			event.div.style.top = 5 + "px";
@@ -404,7 +414,12 @@ function loadFromDB(id) {
 
 function addEventsFromDB(jsonMsg) {
 	for(i = 0; i < jsonMsg.length; i++) {
-		var event = createEvent(ratioXToCoord(jsonMsg[i][5]), ratioYToCoord(jsonMsg[i][6]), new Date(getDeformattedDateString(jsonMsg[i][2])));
+		let date = new Date(getDeformattedDateString(jsonMsg[i][2]));
+		let coordFromDate = getCoordFromDate(date);
+		let x = ratioXToCoord(jsonMsg[i][5]);
+		let y = ratioYToCoord(jsonMsg[i][6]);
+		if (Math.abs(coordFromDate - x) < 5) x = coordFromDate;
+		var event = createEvent(x, y, date);
 
 		event.isCompleted = jsonMsg[i][3] == 1;
 		createEventDiv(event.xPos, event.yPos, event);
@@ -928,9 +943,24 @@ function openGuideWindow() {
 	blurBackground(true);
 }
 
-function downloadCanvas(link, fileName) {
-	link.href = canvas.toDataURL();
-    link.download = fileName;
+function formatCanvasFilename(filename) {
+	return filename.replace(" ", "-") + ".png";
+}
+
+function downloadCanvas(a) {
+	let canvasDiv = $("#canvas_div").get(0);
+	html2canvas(canvasDiv).then((rCanvas) => {
+		var dt = rCanvas.toDataURL('image/png');
+		/* Change MIME type to trick the browser to downlaod the file instead of displaying it */
+		dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+
+		/* In addition to <a>'s "download" attribute, you can define HTTP-style headers */
+		dt = dt.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=canvas.png');
+
+		a.download = formatCanvasFilename($("#timeline-name").get(0).value);
+		a.href = dt;
+		a.click();
+	});
 }
 
 function checkEventIsEmpty(event) {
@@ -1151,7 +1181,6 @@ function setDate(dateString) {
 		}
 		calculateTickCoords();
 		calculateProgress();
-		calculateEventPositions();
 	}
 	drawTimeline();
 }
