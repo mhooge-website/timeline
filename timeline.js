@@ -237,6 +237,13 @@ function initialize(id=null) {
 	}
 }
 
+/*
+	This function is necessary because document loading might
+	finish before or after events are loaded from database.
+	This method is called after events are loaded from the database,
+	and waits for document to load, before setting timeline and canvas
+	size (or does so immediately, if document is already loaded).
+*/
 function setTimelineDimensions(actionAfter=null) {
 	let dimensionCalls = function() {
 		calculateCanvasVariables();
@@ -397,8 +404,6 @@ function loadFromDB(id) {
 
 function addEventsFromDB(jsonMsg) {
 	for(i = 0; i < jsonMsg.length; i++) {
-		console.log(jsonMsg[i][5]);
-		console.log(ratioXToCoord(jsonMsg[i][5]));
 		var event = createEvent(ratioXToCoord(jsonMsg[i][5]), ratioYToCoord(jsonMsg[i][6]), new Date(getDeformattedDateString(jsonMsg[i][2])));
 
 		event.isCompleted = jsonMsg[i][3] == 1;
@@ -679,15 +684,15 @@ function setEventMinimized(event, isMini) {
 }
 
 function getXRatio(x) {
-	return (x - canvas.getBoundingClientRect().x) / (endX-startX);
+	return (x - canvas.getBoundingClientRect().x - startX) / (endX-startX);
 }
 
 function getYRatio(y) {
-	return (y - canvas.getBoundingClientRect().y) / (this.canvas.height);
+	return (y - canvas.getBoundingClientRect().y) / (canvas.height);
 }
 
 function ratioXToCoord(ratio) {
-	return canvas.getBoundingClientRect().x + (ratio*(endX-startX));
+	return canvas.getBoundingClientRect().x + startX + (ratio*(endX-startX));
 }
 
 function ratioYToCoord(ratio) {
