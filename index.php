@@ -47,13 +47,13 @@
 	<div id="content-div">
 		<div id="option-bar">
 			<div id="option-bar-left">
-				<button id="settings-button" onclick="openSettingsWindow();" class="btn btn-primary">
+				<button id="settings-button" onclick="openAndBlur('settings-div'); showTimelineId();" class="btn btn-primary">
 					<img src="/projects/timeline/icons/settings.png" width="25" height="25" alt="Settings" class="icon-img" />
 				</button>
 				<button id="reset-button" onclick="resetTimeline();" class="btn btn-primary">
 					<img src="/projects/timeline/icons/trash.png" width="25" height="25" alt="Reset" class="icon-img" />
 				</button>
-				<button id="help-button" onclick="openGuideWindow();" class="btn btn-primary">
+				<button id="help-button" onclick="openAndBlur('guide-div');" class="btn btn-primary">
 					<img src="/projects/timeline/icons/questionmark.png" width="25" height="25" alt="Help" class="icon-img" />
 				</button>
 			</div>
@@ -62,7 +62,10 @@
 					<img src="/projects/timeline/icons/zoom-out.png" width="25" height="25" alt="Zoom Out" class="icon-img" />
 				</button>
 				<button id="zoom-in-button" onclick="zoomOut(1);" class="btn btn-primary">
-					<img src="/projects/timeline/icons/zoom-in.png" width="25" height="25" alt="Zoom In" class="icon-img" />
+						<img src="/projects/timeline/icons/zoom-in.png" width="25" height="25" alt="Zoom In" class="icon-img" />
+				</button>
+				<button id="download-button" onclick="openAndBlur('download-div');" class="btn btn-primary">
+					<img src="/projects/timeline/icons/download.png" width="25" height="25" alt="Download" class="icon-img" />
 				</button>
 				<button id="save-button" onclick="saveTimeline();" class="btn btn-primary">
 					<img src="/projects/timeline/icons/save.png" width="25" height="25" alt="Save" class="icon-img" />
@@ -93,14 +96,18 @@
 			
 		</div>
 
-		<div id="settings-div">
+		<div id="settings-div" class="window">
 			<span id="settings-header">Settings</span>
-			<button id="close-settings-btn" class="btn btn-primary" onclick="animateCloseSettingsWindow();">&times;</button>
+			<button class="btn btn-primary" onclick="closeAndUnblur('settings-div');">&times;</button>
 			<div>
-				<p id="settings-id"></p>
+				<div id="settings-id">
+					
+				</div>
+				
+				<span>Auto-load latest timeline</span>
+				<input id="auto-load-timeline" type="checkbox" onclick="setAutoloadCookie('auto-load-timeline');"/>
 				<button class="btn btn-primary" onclick="showLoadInput();">Load Timeline</button>
 				<button class="btn btn-primary" onclick="newTimeline();">New Timeline</button>
-				<button id="dl-timeline-btn" class="btn btn-primary">Download Timeline</button>
 				<button class="btn btn-primary" onclick="showSetupMenu();">Go to Main Menu</button>
 			</div>
 		</div>
@@ -114,9 +121,9 @@
 			<label id="modal-input-err-label" class="input-error-label" for="input-id"></label>
 		</div>
 
-		<div id="guide-div">
+		<div id="guide-div" class="window">
 			<span>How I timeline?</span>
-			<button id="close-guide-btn" class="btn btn-primary" onclick="animateCloseGuideWindow();">&times;</button>
+			<button class="btn btn-primary" onclick="closeAndUnblur('guide-div');">&times;</button>
 
 			<div id="guide-img" class="guide-content">
 				<div><img src="/projects/timeline/guide_images/guide1.png" alt="Rip"/></div>
@@ -134,6 +141,15 @@
 				<div>Drag events around.</div>
 				<div>Change date of event by dragging it's connecting line.</div>
 				<div>Save your timeline. This generates a unique link, so you can access your timeline later. Save the link :)</div>
+			</div>
+		</div>
+
+		<div id="download-div" class="window">
+			<span>Download as...</span>
+			<button class="btn btn-primary" onclick="closeAndUnblur('download-div');">&times;</button>
+
+			<div>
+				<button id="dl-timeline-btn" class="btn btn-primary">PNG image</button>
 			</div>
 		</div>
 	</div>
@@ -156,18 +172,24 @@
 </html>
 
 <?php
-	$id = null;
+include("./cookie_handler.php");
 
-	$url_split = explode("/", $_SERVER["REQUEST_URI"]);
-	$last_element = $url_split[count($url_split)-1];
-	if(isset($_GET["id"])) {
-		$id = $_GET["id"];
-	}
-	else if($last_element != "timeline" && $last_element != "") {
-		$id = $last_element;
-	}
-	
-	if ($id != null) {
-		echo "<script type='text/javascript'>loadTimeline('$id');</script>";
-	}
+$id = null;
+
+$url_split = explode("/", $_SERVER["REQUEST_URI"]);
+$last_element = $url_split[count($url_split)-1];
+if(isset($_GET["id"])) {
+	$id = $_GET["id"];
+}
+else if($last_element != "timeline" && $last_element != "") {
+	$id = $last_element;
+}
+else if(manipulateCookies("enabled")) {
+	global $cookie_name;
+	$id = $_COOKIE[$cookie_name];
+}
+
+if ($id != null) {
+	echo "<script type='text/javascript'>loadTimeline('$id');</script>";
+}
 ?>

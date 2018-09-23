@@ -237,6 +237,7 @@ function initialize(id=null) {
 		setTimelineDimensions();
 	}
 	$("#dl-timeline-btn").get(0).addEventListener("click", () => downloadCanvas($("#dl-canvas").get(0)), false);
+	checkAutoLoadEnabled();
 }
 
 /*
@@ -305,13 +306,16 @@ function calculateEventPositions() {
 	for(i = 0; i < events.length; i++) {
 		let event = events[i];
 		let ratioX = event.div.offsetLeft/windowSize.w;
-
+		let ratioY = event.div.offsetTop/windowSize.h;
 		let coordFromDate = getCoordFromDate(event.date);
 		let x = ratioX * window.innerWidth;
 		if (Math.abs(coordFromDate - x) < 5) x = coordFromDate;
+		let y = ratioY * window.innerHeight;
 
 		event.div.style.left = x + "px";
 		event.xPos = x;
+		event.div.style.top = y + "px";
+		event.yPos = y;
 
 		if(event.div.offsetTop < canvas.offsetTop) {
 			event.div.style.top = 5 + "px";
@@ -323,6 +327,49 @@ function calculateEventPositions() {
 			event.div.style.top = (event.yPos - (event.div.offsetTop/2)) + "px";
 		}
 	}
+}
+
+function checkAutoLoadEnabled() {
+	http = new XMLHttpRequest();
+	let jsonObj = { "action": "enabled" };
+	let jsonMsg = JSON.stringify(jsonObj);
+	http.onreadystatechange = function(e) {
+		if (this.readyState == 4 && this.status == 200) {
+			let decoded = JSON.parse(this.responseText);
+			console.log("Auto-load: " + decoded);
+			if (decoded) {
+				$("#auto-load-timeline").get(0).checked = true;
+			}
+		}
+		if(this.status == 500) {
+			console.error("Could not load cookies.");
+			return;
+		}
+	};
+	http.open("POST", "/projects/timeline/cookie_handler.php", true);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.send("action=" + jsonMsg);
+}
+
+function setAutoloadCookie(chckId) {
+	let autoLoad = $("#"+chckId).get(0).checked;
+
+	http = new XMLHttpRequest();
+	let jsonObj = autoLoad ? { "action": "set", "val":timelineId } : { "action": "delete" };
+	console.log(jsonObj);
+	let jsonMsg = JSON.stringify(jsonObj);
+	http.onreadystatechange = function(e) {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText);
+		}
+		if(this.status == 500) {
+			console.error("Could not load cookies.");
+			return;
+		}
+	};
+	http.open("POST", "/projects/timeline/cookie_handler.php", true);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.send("action=" + jsonMsg);
 }
 
 function triggerButtonCooldown(buttonId) {
@@ -904,23 +951,9 @@ function closeSaveModal() {
 	document.getElementById("save-modal").style.display = "none";
 }
 
-function openSettingsWindow() {
-	var settings = document.getElementById("settings-div");
+function showTimelineId() {
 	if(timelineId != null) document.getElementById("settings-id").innerHTML = "Timeline URL: " + getTimelineURL();
 	else document.getElementById("settings-id").innerHTML = "Timeline ID:<br>Not generated yet.";
-
-	settings.style.display = "inline-block";
-	settings.style.animationFillMode = "none";
-	settings.style.animationName = "fade-in-animation";
-
-	blurBackground(true);
-}
-
-function animateCloseSettingsWindow() {
-	var settings = document.getElementById("settings-div");
-	settings.style.animationFillMode = "forwards";
-	settings.style.animationName = "zoom-out";
-	blurBackground(false);
 }
 
 function closeSettingsWindow() {
@@ -928,19 +961,19 @@ function closeSettingsWindow() {
 	blurBackground(false);
 }
 
-function animateCloseGuideWindow() {
-	var guide = $("#guide-div").get(0);
-	guide.style.animationFillMode = "forwards";
-	guide.style.animationName = "zoom-out";
-	blurBackground(false);
-}
-
-function openGuideWindow() {
-	let guide = $("#guide-div").get(0);
+function openAndBlur(windowName) {
+	let guide = $("#"+windowName).get(0);
 	guide.style.display = "block";
 	guide.style.animationFillMode = "none";
 	guide.style.animationName = "fade-in-animation";
 	blurBackground(true);
+}
+
+function closeAndUnblur(windowName) {
+	var dlWindow = $("#"+windowName).get(0);
+	dlWindow.style.animationFillMode = "forwards";
+	dlWindow.style.animationName = "zoom-out";
+	blurBackground(false);
 }
 
 function formatCanvasFilename(filename) {
