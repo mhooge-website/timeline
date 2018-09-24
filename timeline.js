@@ -601,6 +601,7 @@ function createEvent(x, y, date=null) {
 		txt: null,
 		date: date,
 		isCompleted: false,
+		isRigid: false,
 		status: "new",
 		minimizedIcon: null,
 		setCompleted: function(completed) {
@@ -711,6 +712,8 @@ function createEventDiv(x, y, event) {
 	inputDiv.style.top = divY + "px";
 
 	if (event.date == null) event.date = getDateFromCoord(x);
+	let coordFromDate = getCoordFromDate(event.date);
+	event.isRigid = coordFromDate - 5 < x && coordFromDate + 5 > x;
 	event.setCompleted(checkCompleted.checked);
 	event.checkDeadlineSeverity();
 }
@@ -799,6 +802,9 @@ function onDivDragEnded(event, e) {
 	document.onmousemove = null;
 	
 	if (!fixAxisConformity(event)) eraseAll();
+	let coordFromDate = getCoordFromDate(event.date);
+	let midDiv = getMidPoint(event);
+	event.isRigid = coordFromDate == midDiv.x;
 
 	drawTimeline();
 }
@@ -830,7 +836,17 @@ function onLineDragEnded(event, e) {
 	document.onmouseup = null;
 	document.onmousemove = null;
 	
-	if(!fixAxisConformity(event)) eraseAll();
+	if(event.date < startDate) {
+		event.date = startDate;
+		eraseAll();
+	}
+	else if(event.date > endDate) {
+		event.date = endDate;
+		eraseAll();
+	}
+	let coordFromDate = getCoordFromDate(event.date);
+	let midDiv = getMidPoint(event);
+	event.isRigid = coordFromDate == midDiv.x;
 
 	drawTimeline();
 }
@@ -897,8 +913,9 @@ function getMidPoint(event) {
 }
 
 function drawEventConnectingLine(event) {
-	let divPos = getMidPoint(event);
 	let datePos = getCoordFromDate(event.date).toFixed(0);
+	if (event.isRigid) event.div.style.left = (datePos - event.div.offsetWidth/2) + "px";
+	let divPos = getMidPoint(event);
 
 	if (datePos != divPos.x) {
 		let botY = event.div.offsetTop+event.div.offsetHeight;
@@ -1334,7 +1351,6 @@ function drawMajorTicks() {
 }
 
 function formatMonth(month) {
-	console.log(month);
 	let months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 	return months[month];
 }
