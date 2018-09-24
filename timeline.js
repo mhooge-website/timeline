@@ -337,7 +337,6 @@ function checkAutoLoadEnabled() {
 	http.onreadystatechange = function(e) {
 		if (this.readyState == 4 && this.status == 200) {
 			let decoded = JSON.parse(this.responseText);
-			console.log("Auto-load: " + decoded);
 			if (decoded) {
 				$("#auto-load-timeline").get(0).checked = true;
 			}
@@ -357,7 +356,6 @@ function setAutoloadCookie(chckId) {
 
 	http = new XMLHttpRequest();
 	let jsonObj = autoLoad ? { "action": "set", "val":timelineId } : { "action": "delete" };
-	console.log(jsonObj);
 	let jsonMsg = JSON.stringify(jsonObj);
 	http.onreadystatechange = function(e) {
 		if (this.readyState == 4 && this.status == 200) {
@@ -492,15 +490,23 @@ function getMousePos(xPos, yPos) {
 
 function drawTimeline() {
 	ctx.font = "20px serif";
-	if(isStartAndEndDateSet()) eraseMinorTicks();
+	if(isStartAndEndDateSet()) {
+		eraseTicks();
+	}
 	
 	ctx.strokeStyle = "rgb(0, 0, 0)";
 	
 	drawLine(startX, midY, endX, midY);
 	
+	drawStartDateTick("rgb(0, 0, 0)");
+	drawEndDateTick("rgb(0, 0, 0)");
+	drawStartDate();
+	drawEndDate();
+
 	if(isStartAndEndDateSet()) {
 		drawProgressBar();
 		drawMinorTicks();
+		drawMajorTicks();
 	}
 	
 	for(i = 0; i < events.length; i++) {
@@ -509,11 +515,6 @@ function drawTimeline() {
 			else drawMinimizedEvent(events[i]);
 		}
 	}
-	
-	drawStartDateTick("rgb(0, 0, 0)");
-	drawEndDateTick("rgb(0, 0, 0)");
-	drawStartDate();
-	drawEndDate();
 }
 
 function showHelperText() {
@@ -626,7 +627,7 @@ function createEventDiv(x, y, event) {
 	inputDiv.className = "input-div";
 
 	var headerDiv = document.createElement("div");
-	headerDiv.id = "input-header";
+	headerDiv.className = "input-header";
 
 	let date = event.date == null ? getDateFromCoord(x) : event.date;
 	
@@ -649,10 +650,10 @@ function createEventDiv(x, y, event) {
 	inputDiv.appendChild(headerDiv);
 
 	let midDiv = document.createElement("div");
-	midDiv.id = "input-mid";
+	midDiv.className = "input-mid";
 
 	var textArea = document.createElement("textarea");
-	textArea.id = "text-area";
+	textArea.className = "text-area";
 	textArea.maxLength = 120;
 	textArea.rows = 5;
 	midDiv.appendChild(textArea);
@@ -660,7 +661,7 @@ function createEventDiv(x, y, event) {
 	inputDiv.appendChild(midDiv);
 
 	let footerDiv = document.createElement("div");
-	footerDiv.id = "input-footer";
+	footerDiv.className = "input-footer";
 
 	var checkCompleted = document.createElement("input");
 	checkCompleted.name = "chck-complete";
@@ -1231,9 +1232,9 @@ function drawStartDate() {
 function drawEndDate() {
 	if(endDate != null) {
 		ctx.fillStyle = "rgb(255, 255, 255)";
-		ctx.fillRect(endX-80, midY-45, 110, 20);
+		ctx.fillRect(endX-60, midY-45, 110, 20);
 		ctx.fillStyle = "rgb(0, 0, 0)"
-		ctx.fillText(getFormattedDateString(endDate), endX-70, midY-30);
+		ctx.fillText(getFormattedDateString(endDate), endX-50, midY-30);
 	}
 }
 
@@ -1282,24 +1283,32 @@ function calculateTickCoords() {
 	var diff = getDayFromMillis(endDate.getTime()) - getDayFromMillis(startDate.getTime());
 	var diffMonths = endDate.getMonth() - startDate.getMonth();
 	
-	console.log(diff);
+	var factor = (endX - startX)/diff;
+	let copyDate = new Date(startDate.getTime());
+	majorTicks = new Array();
+
+	for(i = 0; i < diff; i++) {
+		if (diffMonths > 0) {
+			if (copyDate.getDate() == 1) majorTicks.push(startX + (factor*i));
+		}
+		else if (diff > 7 && copyDate.getDay() == 0) majorTicks.push(startX + (factor*i));
+		copyDate.setTime(copyDate.getTime() + getMillisFromDay(1));
+	}
+
 	if(diff > 60) {
 		diff = diff/Math.ceil(diff/60);
 	}
-	var factor = (endX - startX)/diff;
+	factor = (endX - startX)/diff;
 	ticks = new Array();
-	majorTicks = new Array();
 	
 	for(i = 0; i < diff; i++) {
 		ticks.push(startX + (factor*i));
-		console.log(startX + (factor*i));
 	}
-	console.log(endX);
 }
 
-function eraseMinorTicks() {
+function eraseTicks() {
 	ctx.fillStyle = "rgb(255, 255, 255)";
-	ctx.fillRect(startX + 2, midY - tickHeight, endX - startX - 4, tickHeight * 2);
+	ctx.fillRect(startX + 2, midY - tickHeight-30, endX - startX - 4, tickHeight * 2 + 30);
 }
 
 function drawMinorTicks() {
@@ -1307,6 +1316,27 @@ function drawMinorTicks() {
 	for(i = 0; i < ticks.length; i++) {
 		drawLine(ticks[i], midY-tickHeight/2, ticks[i], midY+tickHeight/2);
 	}
+}
+
+function drawMajorTicks() {
+	ctx.fillStyle = "rgb(0, 0, 0)";
+	let largeTickHeight = tickHeight * 2;
+	let copyDate = new Date(startDate.getTime());
+	for(i = 0; i < majorTicks.length; i++) {
+		ctx.fillRect(majorTicks[i]-1, midY-largeTickHeight/2, 2, largeTickHeight);
+		
+		let y = majorTicks[i] > startX + 70 && majorTicks[i] < endX - 60 ? midY-25 : midY+35;
+		let nextMonth = copyDate.getMonth() + 1;
+		if (nextMonth == 12) nextMonth = 0;
+		copyDate.setMonth(nextMonth);
+		ctx.fillText(formatMonth(copyDate.getMonth()), majorTicks[i]-17, y);
+	}
+}
+
+function formatMonth(month) {
+	console.log(month);
+	let months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+	return months[month];
 }
 
 function calculateProgress() {
