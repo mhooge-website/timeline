@@ -21,6 +21,7 @@ var endDate;
 var canvas;
 var ctx;
 var ticks;
+var majorTicks;
 var timelineProgress = 0.0;
 var progressLength;
 var events;
@@ -1217,15 +1218,21 @@ function getCoordFromDate(date) {
 
 function calculateTickCoords() {
 	var diff = getDayFromMillis(endDate.getTime()) - getDayFromMillis(startDate.getTime());
-	if(diff > 30) {
-		diff = diff/(diff/30);
+	var diffMonths = endDate.getMonth() - startDate.getMonth();
+	
+	console.log(diff);
+	if(diff > 60) {
+		diff = diff/Math.ceil(diff/60);
 	}
-	var factor = (endX - startX)/diff+1;
+	var factor = (endX - startX)/diff;
 	ticks = new Array();
+	majorTicks = new Array();
 	
 	for(i = 0; i < diff; i++) {
 		ticks.push(startX + (factor*i));
+		console.log(startX + (factor*i));
 	}
+	console.log(endX);
 }
 
 function eraseMinorTicks() {
