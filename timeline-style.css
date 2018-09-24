@@ -76,17 +76,8 @@
 }
 
 #guide-div {
-	display: none;
-	position: absolute;
-	margin: auto;
-	padding: 10px;
-	left: 0; right: 0; top: 0; bottom: 0;
-	z-index: 3;
-	color: white;
 	background-color: rgba(0, 0, 0, 0.6);
 	text-align: center;
-
-	animation-duration: 0.5s;
 
 	width: 1400px;
 	height: 360px;
@@ -94,10 +85,6 @@
 
 #guide-div > span {
 	font-size: 30px;
-}
-
-#close-guide-btn {
-	float: right;
 }
 
 .guide-content {
@@ -112,8 +99,7 @@
 .guide-content > div {
 	position: relative;
 	width: 250px;
-	
-	animation-duration: 0.4s;
+
 	text-align: center;
 	padding: 5px;
 }
@@ -135,6 +121,23 @@
 	border-style: solid;
 	border-color: red;
 	border-width: 1px;
+}
+
+#download-div {
+	background-color: rgba(0, 0, 0, 0.6);
+	text-align: center;
+
+	width: 270px;
+	height: 220px;
+}
+
+#download-div > span {
+	font-size: 20px;
+}
+
+#download-div > div {
+	text-align: center;
+	margin-top: 20px;
 }
 
 @keyframes fade-in-animation {
@@ -185,20 +188,28 @@
 	}
 }
 
-#settings-div {
+.window {
 	position: absolute;
 	display: none;
+	margin: auto;
+	padding: 10px;
+	left: 0; right: 0; top: 0; bottom: 0;
+	z-index: 3;
 	color: white;
+
+	animation-duration: 0.5s;
+}
+
+.window > button {
+	float: right;
+}
+
+#settings-div {
 	background-color: rgb(77, 78, 85);
 	border-color: black;
 	border-style: groove;
-	padding: 10px;
-	top: 0; left: 0; right: 0; bottom: 0;
-	margin: auto;
-	height: 260px;
+	height: 290px;
 	width: 275px;
-	animation-duration: 0.4s;
-	z-index: 3;
 }
 
 #settings-div > div {
@@ -211,14 +222,23 @@
 	width: 100%;
 }
 
+#settings-div > div > input {
+	float: right;
+	margin-bottom: 10px;
+}
+
+#settings-id {
+	background-color: #5e5e5e;
+	border-style: dotted;
+	border-color: rgb(28, 38, 126);
+	border-width: 2px;
+	margin-bottom: 10px;
+}
+
 #settings-header {
 	font-size: 20px;
 	margin-right: 0px;
 	width: 50%;
-}
-
-#close-settings-btn {
-	float: right;
 }
 
 #save-modal {
