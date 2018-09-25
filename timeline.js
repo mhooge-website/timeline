@@ -351,9 +351,7 @@ function checkAutoLoadEnabled() {
     http.send("action=" + jsonMsg);
 }
 
-function setAutoloadCookie(chckId) {
-	let autoLoad = $("#"+chckId).get(0).checked;
-
+function setAutoloadCookie(autoLoad) {
 	http = new XMLHttpRequest();
 	let jsonObj = autoLoad ? { "action": "set", "val":timelineId } : { "action": "delete" };
 	let jsonMsg = JSON.stringify(jsonObj);
@@ -946,6 +944,7 @@ function clearAll() {
 }
 
 function showSetupMenu() {
+	setAutoloadCookie(false);
 	window.location.href = getBaseURL();
 }
 

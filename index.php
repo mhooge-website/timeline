@@ -105,7 +105,7 @@
 				</div>
 				
 				<span>Auto-load latest timeline</span>
-				<input id="auto-load-timeline" type="checkbox" onclick="setAutoloadCookie('auto-load-timeline');"/>
+				<input id="auto-load-timeline" type="checkbox" onclick="setAutoloadCookie(this.checked);"/>
 				<button class="btn btn-primary" onclick="showLoadInput();">Load Timeline</button>
 				<button class="btn btn-primary" onclick="newTimeline();">New Timeline</button>
 				<button class="btn btn-primary" onclick="showSetupMenu();">Go to Main Menu</button>
