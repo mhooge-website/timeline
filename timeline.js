@@ -769,6 +769,7 @@ function ratioYToCoord(ratio) {
 
 function divDragStarted(event, e) {
 	let pos = getMousePos(e.clientX, e.clientY);
+	event.isRigid = false;
 
 	event.xPos = pos.x;
 	event.yPos = pos.y;
@@ -806,12 +807,14 @@ function onDivDragEnded(event, e) {
 	let coordFromDate = getCoordFromDate(event.date);
 	let midDiv = getMidPoint(event);
 	event.isRigid = coordFromDate == midDiv.x;
+	console.log(event.isRigid);
 
 	drawTimeline();
 }
 
 function lineDragStarted(event, e) {
 	event.status = "changed";
+	event.isRigid = false;
 	document.onmouseup = function(e) { onLineDragEnded(event, e); };
 	document.onmousemove = function(e) { onLineDragEvent(event, e); };
 }
