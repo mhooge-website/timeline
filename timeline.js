@@ -331,7 +331,7 @@ function calculateEventPositions() {
 }
 
 function checkAutoLoadEnabled() {
-	http = new XMLHttpRequest();
+	let http = new XMLHttpRequest();
 	let jsonObj = { "action": "enabled" };
 	let jsonMsg = JSON.stringify(jsonObj);
 	http.onreadystatechange = function(e) {
@@ -352,21 +352,24 @@ function checkAutoLoadEnabled() {
 }
 
 function setAutoloadCookie(autoLoad) {
-	http = new XMLHttpRequest();
-	let jsonObj = autoLoad ? { "action": "set", "val":timelineId } : { "action": "delete" };
-	let jsonMsg = JSON.stringify(jsonObj);
-	http.onreadystatechange = function(e) {
-		if (this.readyState == 4 && this.status == 200) {
-			console.log(this.responseText);
-		}
-		if(this.status == 500) {
-			console.error("Could not load cookies.");
-			return;
-		}
-	};
-	http.open("POST", "/projects/timeline/cookie_handler.php", true);
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    http.send("action=" + jsonMsg);
+	let http = new XMLHttpRequest();
+	return new Promise((resolve, reject) => {
+		let jsonObj = autoLoad ? { "action": "set", "val":timelineId } : { "action": "delete" };
+		let jsonMsg = JSON.stringify(jsonObj);
+		http.onreadystatechange = function(e) {
+			if (this.readyState == 4 && this.status == 200) {
+				console.log(this.responseText);
+				resolve(this.responseText);
+			}
+			if(this.status == 500) {
+				console.error("Could not load cookies.");
+				reject("Could not load cookies.");
+			}
+		};
+		http.open("POST", "/projects/timeline/cookie_handler.php", true);
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		http.send("action=" + jsonMsg);
+	});
 }
 
 function triggerButtonCooldown(buttonId) {
@@ -943,8 +946,8 @@ function clearAll() {
 	hideHelperText();
 }
 
-function showSetupMenu() {
-	setAutoloadCookie(false);
+async function showSetupMenu() {
+	await setAutoloadCookie(false);
 	window.location.href = getBaseURL();
 }
 
