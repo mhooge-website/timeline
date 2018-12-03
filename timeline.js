@@ -74,7 +74,6 @@ function initialize(id=null) {
 	document.getElementById("startup-div").style.display = "none";
 	document.getElementById("content-div").style.display = "block";
 	canvas = document.getElementById("canvas");
-	
 	zoomLevel = 6;
 	zoomValues = [0.1, 0.25, 0.5, 0.75, 0.8, 0.9, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4];
 	endDate = null;
@@ -807,7 +806,6 @@ function onDivDragEnded(event, e) {
 	let coordFromDate = getCoordFromDate(event.date);
 	let midDiv = getMidPoint(event);
 	event.isRigid = coordFromDate == midDiv.x;
-	console.log(event.isRigid);
 
 	drawTimeline();
 }
