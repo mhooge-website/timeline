@@ -1301,7 +1301,7 @@ function getCoordFromDate(date) {
 
 function calculateTickCoords() {
 	var diff = getDayFromMillis(endDate.getTime()) - getDayFromMillis(startDate.getTime());
-	var diffMonths = endDate.getMonth() - startDate.getMonth();
+    var diffMonths = endDate.getMonth() - startDate.getMonth();
 	
 	var factor = (endX - startX)/diff;
 	let copyDate = new Date(startDate.getTime());
@@ -1340,16 +1340,19 @@ function drawMinorTicks() {
 
 function drawMajorTicks() {
 	ctx.fillStyle = "rgb(0, 0, 0)";
-	let largeTickHeight = tickHeight * 2;
+    let largeTickHeight = tickHeight * 2;
+    var diffMonths = endDate.getMonth() - startDate.getMonth();
 	let copyDate = new Date(startDate.getTime());
 	for(i = 0; i < majorTicks.length; i++) {
 		ctx.fillRect(majorTicks[i]-1, midY-largeTickHeight/2, 2, largeTickHeight);
-		
-		let y = majorTicks[i] > startX + 70 && majorTicks[i] < endX - 60 ? midY-25 : midY+35;
-		let nextMonth = copyDate.getMonth() + 1;
-		if (nextMonth == 12) nextMonth = 0;
-		copyDate.setMonth(nextMonth);
-		ctx.fillText(formatMonth(copyDate.getMonth()), majorTicks[i]-17, y);
+        
+        if (diffMonths > 0) {
+            let y = majorTicks[i] > startX + 70 && majorTicks[i] < endX - 60 ? midY-25 : midY+35;
+            let nextMonth = copyDate.getMonth() + 1;
+            if (nextMonth == 12) nextMonth = 0;
+            copyDate.setMonth(nextMonth);
+            ctx.fillText(formatMonth(copyDate.getMonth()), majorTicks[i]-17, y);
+        }
 	}
 }
 
